@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Engine Includes">
+      <UniqueIdentifier>{94f7dcfc-4f2e-44f0-a2f5-e5db3d7f2b6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine Code">
+      <UniqueIdentifier>{1e618e89-f4c3-4837-b7d3-a6e5f5309510}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Source\EngineIncludes\S2D_Core.h">
+      <Filter>Engine Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\EngineIncludes\S2D_Graphics.h">
+      <Filter>Engine Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\EngineIncludes.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="..\..\Source\EngineIncludes\S2D_Misc.h">
+      <Filter>Engine Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\EngineIncludes\S2D_Input.h">
+      <Filter>Engine Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\EngineVersion.h" />
+    <ClInclude Include="..\..\Source\EngineIncludes\S2D_Physics.h">
+      <Filter>Engine Includes</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Source\EngineCore.cpp">
+      <Filter>Engine Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\EngineGraphics.cpp">
+      <Filter>Engine Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\EngineInput.cpp">
+      <Filter>Engine Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\EnginePhysics.cpp">
+      <Filter>Engine Code</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="S2D.rc" />
+  </ItemGroup>
+</Project>
