@@ -46,8 +46,8 @@ There are three ways to use S2D Engine:
 This way is already unavailable, i need to finish the core first!
 
 ### 2. Install the Engine Library
-In order to successfully compile your game with S2D Base SDK, you need to also implemement these **3rd-Party** libraries
-1. Go to the website [here](https://s2dengine.com/downloads), and download the Engine Base SDK (this package contains only the Engine library).
+In order to successfully compile your game with S2D Game SDK, you need to also implemement these **3rd-Party** libraries
+1. Go to the website [here](https://seven2d.eu/downloads), and download the **S2D Game SDK** (this package contains only the Engine library).
 2. Create a C++ project using Visual Studio (+ setup the project)
 3. Add the dependencies (Includes and .lib files)
 4. Write a code (you can take the Example code from below)
