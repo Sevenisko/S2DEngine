@@ -27,6 +27,9 @@
     <ClInclude Include="..\..\Source\EngineIncludes\S2D_Physics.h">
       <Filter>Engine Includes</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\EngineIncludes\S2D_Audio.h">
+      <Filter>Engine Includes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\EngineCore.cpp">
@@ -39,6 +42,9 @@
       <Filter>Engine Code</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\EnginePhysics.cpp">
+      <Filter>Engine Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\EngineAudio.cpp">
       <Filter>Engine Code</Filter>
     </ClCompile>
   </ItemGroup>

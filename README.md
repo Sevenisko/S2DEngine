@@ -12,10 +12,11 @@ A Open-Source 2D Game Engine made entirely for Game Development, also for my per
 ## Engine Features
 - [x] Core Engine API
 	- [x] Base Engine Class (S2DGame)
-	- [x] Engine Update handled by library
+	- [x] Engine Loop handled by library
 	- [x] Fully functional Engine Structure   
 - [x] Graphics Subsystem
 	- [x] Creation of Window and Renderer
+	- [x] 2D World Matrix
 	- [x] Implementation of Rendering Features
 		- [x] Rendering Primitives (Rect, Filled Rect, Line, Point)
 		- [x] Sprite Renderer
@@ -29,8 +30,11 @@ A Open-Source 2D Game Engine made entirely for Game Development, also for my per
 - [x] Sound Subsystem
 	- [x] Ability to play music
 	- [x] Ability to play sound files
-	- [x] Ability to set Music and Sound volume
-- [ ] Physics Subsystem
+	- [x] Ability to set Music and Sound volume (MIDI volume control currently unavailable)
+- [x] Physics Subsystem
+  - [x] Dynamic colliders (affected by gravity, etc)
+  - [x] Static colliders
+  - [ ] Getting it fully functional
 
 ## How to use?
 There are three ways to use S2D Engine:

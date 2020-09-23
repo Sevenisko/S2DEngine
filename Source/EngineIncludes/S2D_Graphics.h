@@ -141,6 +141,22 @@ public:
 		return Vec2(x, y);
 	}
 
+	static Vec2 DistanceVec(Vec2 v1, Vec2 v2)
+	{
+		float diffX = v1.x - v2.x;
+		float diffY = v1.y - v2.y;
+
+		return Vec2(diffX, diffY);
+	}
+
+	static float Distance(Vec2 v1, Vec2 v2)
+	{
+		float diffX = v1.x - v2.x;
+		float diffY = v1.y - v2.y;
+
+		return sqrtf((diffY * diffY) + (diffX * diffX));
+	}
+
 	Vec2 operator =(Vec2 a)
 	{
 		this->x = a.y;
@@ -329,25 +345,25 @@ public:
     void SetFullscreen(bool state);
 
 	// Draws an filled box
-	void RenderFilledBox(Vec2 pos, Vec2 size, Color color);
+	void RenderFilledBox(S2DCamera* cam, Vec2 pos, Vec2 center, Vec2 size, Color color);
 
 	// Draws an wireframe box
-	void RenderBox(Vec2 pos, Vec2 size, Color color);
+	void RenderBox(S2DCamera* cam, Vec2 pos, Vec2 center, Vec2 size, Color color);
 
 	// Drawns an basic line
-	void RenderLine(Vec2 p1, Vec2 p2, Color color);
+	void RenderLine(S2DCamera* cam, Vec2 p1, Vec2 p2, Color color);
 
 	// Draws an single point
-	void RenderPoint(Vec2 position, Color color);
+	void RenderPoint(S2DCamera* cam, Vec2 position, Color color);
 
 	// Draws an sprite
-	void RenderSprite(S2DSprite* sprite, Vec2 pos, Vec2 center, Vec2 size, float angle, TexFlipMode flip, Color color);
+	void RenderSprite(S2DCamera* cam, S2DSprite* sprite, Vec2 pos, Vec2 center, Vec2 size, float angle, TexFlipMode flip, Color color);
 
 	// Draws an texture
-	void RenderTexture(int textureID, Vec2 pos, Vec2 center, Vec2 size, float angle, TexFlipMode flip, Color color);
+	void RenderTexture(S2DCamera* cam, int textureID, Vec2 pos, Vec2 center, Vec2 size, float angle, TexFlipMode flip, Color color);
 
 	// Draws an texture
-	void RenderTexture(S2DTexture* tex, Vec2 pos, Vec2 center, Vec2 size, float angle, TexFlipMode flip, Color color);
+	void RenderTexture(S2DCamera* cam, S2DTexture* tex, Vec2 pos, Vec2 center, Vec2 size, float angle, TexFlipMode flip, Color color);
 
 	// Loads an texture from file
 	int LoadTexture(const char* fileName);

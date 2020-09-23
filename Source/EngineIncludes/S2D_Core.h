@@ -29,17 +29,12 @@ struct VersionInfo
 // Default Engine Settings
 extern EngineInitSettings* defaultSettings;
 
-#ifdef S2D_MAIN_INCLUDED
-#define DllExport __declspec(dllexport)
-#else
-#define DllExport
-#endif // S2D_MAIN_INCLUDED
-
 // Base class for manipulation with S2D Engine
 class DllExport S2DGame
 {
 public:
     S2DGraphics* Graphics;
+    S2DPhysics* Physics;
 
     float GetDeltaTime();
 
@@ -86,6 +81,8 @@ public:
     S2DGame(EngineInitSettings* settings);
 
     ~S2DGame();
+
+    Vec2 Gravity = Vec2(0, -10.0f);
 
 private:
     HANDLE MutexHandle;

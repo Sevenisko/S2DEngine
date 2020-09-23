@@ -244,41 +244,94 @@ S2DTexture* S2DGraphics::GetTextureByID(int texID)
     return LoadedTextures[texID];
 }
 
-void S2DGraphics::RenderSprite(S2DSprite* sprite, Vec2 pos, Vec2 center, Vec2 size, float angle, TexFlipMode flip, Color color)
+void S2DGraphics::RenderSprite(S2DCamera* cam, S2DSprite* sprite, Vec2 pos, Vec2 center, Vec2 size, float angle, TexFlipMode flip, Color color)
 {
     if (sprite->GetTexture()->GetPath() == NULL) return;
 
     SDL_Rect crop = sprite->GetFrames()[sprite->GetCurFrame()];
 
-    SDL_FRect rect = { pos.x - (size.x * center.x), pos.y - (size.y * center.y), size.x, size.y };
+    Vec2 pixPos = Vec2();
+    Vec2 camPixPos = Vec2();
+
+    Vec2Int scrSize = GetCurrentWindowSize();
+    pixPos.x = (pos.x / 16.0f) * scrSize.x;
+    pixPos.y = (pos.y / 16.0f) * scrSize.y;
+
+    camPixPos.x = (cam->Position.x / 16.0f) * scrSize.x;
+    camPixPos.y = (cam->Position.y / 16.0f) * scrSize.y;
+
+    SDL_FRect rect = { pixPos.x - (size.x * center.x) - camPixPos.x + (scrSize.x / 2), pixPos.y - (size.y * center.y) + camPixPos.y + (scrSize.y / 2), size.x, size.y };
+
+    Vec2 dist = Vec2::DistanceVec(pixPos, camPixPos);
+
+    if (dist.x > ((scrSize.x / 2) + size.x) || dist.y > ((scrSize.y / 2) + size.y)) return;
+
     SDL_SetTextureColorMod(sprite->GetTexture()->GetSDLTexture(), color.r, color.g, color.b);
 
     SDL_RenderCopyExF(NativeRenderer, sprite->GetTexture()->GetSDLTexture(), &crop, &rect, angle, NULL, (SDL_RendererFlip)flip);
 }
 
-void S2DGraphics::RenderFilledBox(Vec2 pos, Vec2 size, Color color)
+void S2DGraphics::RenderFilledBox(S2DCamera* cam, Vec2 pos, Vec2 center, Vec2 size, Color color)
 {
-    SDL_FRect rect{ pos.x, pos.y, size.x, size.y };
+    Vec2 pixPos = Vec2();
+    Vec2 camPixPos = Vec2();
+
+    Vec2Int scrSize = GetCurrentWindowSize();
+    pixPos.x = (pos.x / 16.0f) * scrSize.x;
+    pixPos.y = (pos.y / 16.0f) * scrSize.y;
+
+    camPixPos.x = (cam->Position.x / 16.0f) * scrSize.x;
+    camPixPos.y = (cam->Position.y / 16.0f) * scrSize.y;
+
+    SDL_FRect rect = { pixPos.x - (size.x * center.x) - camPixPos.x + (scrSize.x / 2), pixPos.y - (size.y * center.y) + camPixPos.y + (scrSize.y / 2), size.x, size.y };
+
+    Vec2 dist = Vec2::DistanceVec(pixPos, camPixPos);
+
+    if (dist.x > ((scrSize.x / 2) + size.x) || dist.y > ((scrSize.y / 2) + size.y)) return;
 
     SDL_SetRenderDrawColor(NativeRenderer, color.r, color.g, color.b, color.a);
     SDL_RenderFillRectF(NativeRenderer, &rect);
 }
 
-void S2DGraphics::RenderBox(Vec2 pos, Vec2 size, Color color)
+void S2DGraphics::RenderBox(S2DCamera* cam, Vec2 pos, Vec2 center, Vec2 size, Color color)
 {
-    SDL_FRect rect{ pos.x, pos.y, size.x, size.y };
+    Vec2 pixPos = Vec2();
+    Vec2 camPixPos = Vec2();
 
+    Vec2Int scrSize = GetCurrentWindowSize();
+    pixPos.x = (pos.x / 16.0f) * scrSize.x;
+    pixPos.y = (pos.y / 16.0f) * scrSize.y;
+
+    camPixPos.x = (cam->Position.x / 16.0f) * scrSize.x;
+    camPixPos.y = (cam->Position.y / 16.0f) * scrSize.y;
+
+    SDL_FRect rect = { pixPos.x - (size.x * center.x) - camPixPos.x + (scrSize.x / 2), pixPos.y - (size.y * center.y) + camPixPos.y + (scrSize.y / 2), size.x, size.y };
+
+    Vec2 dist = Vec2::DistanceVec(pixPos, camPixPos);
+
+    if (dist.x > ((scrSize.x / 2) + size.x) || dist.y > ((scrSize.y / 2) + size.y)) return;
+    
     SDL_SetRenderDrawColor(NativeRenderer, color.r, color.g, color.b, color.a);
     SDL_RenderDrawRectF(NativeRenderer, &rect);
 }
 
-void S2DGraphics::RenderLine(Vec2 p1, Vec2 p2, Color color)
+void S2DGraphics::RenderLine(S2DCamera* cam, Vec2 p1, Vec2 p2, Color color)
 {
+    Vec2 pixPos1 = Vec2();
+    Vec2 pixPos2 = Vec2();
+    Vec2 camPixPos = Vec2();
+
+    Vec2Int scrSize = GetCurrentWindowSize();
+    pixPos1.x = (p1.x / 16.0f) * scrSize.x + (scrSize.x / 2);
+    pixPos1.y = (p2.y / 16.0f) * scrSize.y + (scrSize.x / 2);
+    pixPos2.x = (p1.x / 16.0f) * scrSize.x + (scrSize.x / 2);
+    pixPos2.y = (p2.y / 16.0f) * scrSize.y + (scrSize.x / 2);
+
     SDL_SetRenderDrawColor(NativeRenderer, color.r, color.g, color.b, color.a);
     SDL_RenderDrawLineF(NativeRenderer, p1.x, p1.y, p2.x, p2.y);
 }
 
-void S2DGraphics::RenderPoint(Vec2 position, Color color)
+void S2DGraphics::RenderPoint(S2DCamera* cam, Vec2 position, Color color)
 {
     SDL_SetRenderDrawColor(NativeRenderer, color.r, color.g, color.b, color.a);
     SDL_RenderDrawPointF(NativeRenderer, position.x, position.y);
@@ -324,10 +377,11 @@ bool S2DGraphics::UnloadTexture(S2DTexture* texture)
     if (tex)
     {
         SDL_DestroyTexture(tex);
-        delete texture;
-
+       
         int index = 0;
         std::vector<S2DTexture*>::iterator it = std::find(LoadedTextures.begin(), LoadedTextures.end(), texture);
+
+        delete texture;
 
         if (it != LoadedTextures.end())
             index = std::distance(LoadedTextures.begin(), it);
@@ -382,22 +436,52 @@ void S2DGraphics::ClearTextures()
     }
 }
 
-void S2DGraphics::RenderTexture(int textureID, Vec2 pos, Vec2 center, Vec2 size, float angle, TexFlipMode flip, Color color)
+void S2DGraphics::RenderTexture(S2DCamera* cam, int textureID, Vec2 pos, Vec2 center, Vec2 size, float angle, TexFlipMode flip, Color color)
 {
     auto tex = LoadedTextures[textureID];
     if (!tex->GetSDLTexture()) return;
 
-    SDL_FRect rect = { pos.x - (size.x * center.x), pos.y - (size.y * center.y), size.x, size.y };
+    Vec2 pixPos = Vec2();
+    Vec2 camPixPos = Vec2();
+
+    Vec2Int scrSize = GetCurrentWindowSize();
+    pixPos.x = (pos.x / 16.0f) * scrSize.x;
+    pixPos.y = (pos.y / 16.0f) * scrSize.y;
+
+    camPixPos.x = (cam->Position.x / 16.0f) * scrSize.x;
+    camPixPos.y = (cam->Position.y / 16.0f) * scrSize.y;
+
+    SDL_FRect rect = { pixPos.x - (size.x * center.x) - camPixPos.x + (scrSize.x / 2), pixPos.y - (size.y * center.y) + camPixPos.y + (scrSize.y / 2), size.x, size.y };
+
+    Vec2 dist = Vec2::DistanceVec(pixPos, camPixPos);
+
+    if (dist.x > ((scrSize.x / 2) + size.x) || dist.y > ((scrSize.y / 2) + size.y)) return;
+
     SDL_SetTextureColorMod(tex->GetSDLTexture(), color.r, color.g, color.b);
 
     SDL_RenderCopyExF(NativeRenderer, tex->GetSDLTexture(), NULL, &rect, angle, NULL, (SDL_RendererFlip)flip);
 }
 
-void S2DGraphics::RenderTexture(S2DTexture* tex, Vec2 pos, Vec2 center, Vec2 size, float angle, TexFlipMode flip, Color color)
+void S2DGraphics::RenderTexture(S2DCamera* cam, S2DTexture* tex, Vec2 pos, Vec2 center, Vec2 size, float angle, TexFlipMode flip, Color color)
 {
     if (!tex->GetSDLTexture()) return;
 
-    SDL_FRect rect = { pos.x - (size.x * center.x), pos.y - (size.y * center.y), size.x, size.y };
+    Vec2 pixPos = Vec2();
+    Vec2 camPixPos = Vec2();
+
+    Vec2Int scrSize = GetCurrentWindowSize();
+    pixPos.x = (pos.x / 16.0f) * scrSize.x;
+    pixPos.y = (pos.y / 16.0f) * scrSize.y;
+
+    camPixPos.x = (cam->Position.x / 16.0f) * scrSize.x;
+    camPixPos.y = (cam->Position.y / 16.0f) * scrSize.y;
+
+    SDL_FRect rect = { pixPos.x - (size.x * center.x) - camPixPos.x + (scrSize.x / 2), pixPos.y - (size.y * center.y) + camPixPos.y + (scrSize.y / 2), size.x, size.y };
+
+    Vec2 dist = Vec2::DistanceVec(pixPos, camPixPos);
+
+    if (dist.x > ((scrSize.x / 2) + size.x) || dist.y > ((scrSize.y / 2) + size.y)) return;
+
     SDL_SetTextureColorMod(tex->GetSDLTexture(), color.r, color.g, color.b);
 
     SDL_RenderCopyExF(NativeRenderer, tex->GetSDLTexture(), NULL, &rect, angle, NULL, (SDL_RendererFlip)flip);

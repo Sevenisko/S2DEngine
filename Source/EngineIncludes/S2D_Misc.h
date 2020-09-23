@@ -20,6 +20,12 @@
 #include <Windows.h>
 #include <ImageHlp.h>
 
+#ifdef S2D_MAIN_INCLUDED
+#define DllExport __declspec(dllexport)
+#else
+#define DllExport
+#endif // S2D_MAIN_INCLUDED
+
 #define S2DAssert(expression) if(!expression) { if(IsConsoleApp()) {printf("File: %s\nLine: %d\n\t %s", __FILE__, __LINE__, #expression); abort(); } else { char msg[128]; sprintf(msg, "File: %s\nLine: %d\n\t %s", __FILE__, __LINE__, #expression);  MessageBoxA(NULL, msg, "S2D Assert Failure", MB_OK | MB_ICONERROR); ExitProcess(1); } }
 
 #define S2DFatalError(message) if(IsConsoleApp()) {printf("Fatal Error: %s", message); abort(); } else { char msg[128]; sprintf(msg, "Fatal Error: %s", message);  MessageBoxA(NULL, msg, "Error", MB_OK | MB_ICONERROR); ExitProcess(1); }

@@ -25,6 +25,11 @@ enum class SoundSide
     Left = 270
 };
 
+#ifndef S2D_MAIN_INCLUDED
+typedef struct Mix_Music Mix_Music;
+typedef struct Mix_Chunk Mix_Chunk;
+#endif // !S2D_MAIN_INCLUDED
+
 class DllExport S2DMusicClip
 {
 public:
@@ -71,6 +76,7 @@ public:
     static void SetAudioPos(S2DAudioClip* clip, SoundSide side, int distance);
     static void SetAudioVolume(int volume);
     static void SetMusicVolume(int volume);
+    static void SetMidiSoundFont(const char* path);
 };
 
 #endif // !S2D_AUDIO_INCLUDED

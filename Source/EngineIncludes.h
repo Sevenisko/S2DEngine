@@ -17,20 +17,29 @@
 
 #ifndef S2D_MAIN_INCLUDED
 #define S2D_MAIN_INCLUDED
-    #include "EngineVersion.h"
-    #include "EngineIncludes/S2D_Misc.h"
-    #include "EngineIncludes/S2D_Graphics.h"
-    #include "EngineIncludes/S2D_Input.h"
-    #include "EngineIncludes/S2D_Core.h"
-    #include "EngineIncludes/S2D_Physics.h"
-    #include "EngineIncludes/S2D_Audio.h"
-
     #include <SDL_mixer.h> 
     #include <SDL_image.h> 
     #include <SDL_ttf.h> 
     #include <SDL_net.h> 
 
+    #include "EngineVersion.h"
+    #include "EngineIncludes/S2D_Misc.h"
+    #include "EngineIncludes/S2D_Graphics.h"
+    #include "EngineIncludes/S2D_Input.h"
     #include <box2d/box2d.h>
+
+    #include "EngineIncludes/S2D_Audio.h"
+    #include "EngineIncludes/S2D_Physics.h"
+    #include "EngineIncludes/S2D_Core.h"
+
+namespace Physics
+{
+    extern std::vector<b2Body*> bodies;
+
+    extern b2Vec2 b2Gravity;
+
+    extern b2World* b2PhysWorld;
+}
 
 namespace Input
 {

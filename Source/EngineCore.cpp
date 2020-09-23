@@ -174,10 +174,11 @@ void S2DGame::Run()
     Mix_Init(NULL);
     TTF_Init();
 
-    if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 12, 4096) < 0)
+    if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 8, 4096) < 0)
         S2DFatalErrorFormatted("Cannot initalizate sound system!\n\t%s", Mix_GetError());
 
     Graphics = new S2DGraphics(CurrentSettings);
+    Physics = new S2DPhysics();
     SDL_RaiseWindow(Graphics->GetWindow());
     WindowFocused = true;
 
@@ -186,6 +187,8 @@ void S2DGame::Run()
     Graphics->OnRenderReload = [&]() { OnRenderReload(); };
 
     Uint64 g_Time = 0;
+
+    float timeStep = 1.0f / 60.0f;
 
     for (;;)
     {
@@ -210,6 +213,8 @@ void S2DGame::Run()
                 Input::UpdateMousePos(size.x / 2, size.y / 2);
             else
                 Input::UpdateMousePos();
+
+            Physics->Update(timeStep);
 
             OnUpdate();
 

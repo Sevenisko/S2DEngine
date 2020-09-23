@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\EngineIncludes.h" />
+    <ClInclude Include="..\..\Source\EngineIncludes\S2D_Audio.h" />
     <ClInclude Include="..\..\Source\EngineIncludes\S2D_Core.h" />
     <ClInclude Include="..\..\Source\EngineIncludes\S2D_Graphics.h" />
     <ClInclude Include="..\..\Source\EngineIncludes\S2D_Input.h" />
@@ -29,6 +30,7 @@
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Source\EngineAudio.cpp" />
     <ClCompile Include="..\..\Source\EngineCore.cpp" />
     <ClCompile Include="..\..\Source\EngineGraphics.cpp" />
     <ClCompile Include="..\..\Source\EngineInput.cpp" />
@@ -124,13 +126,14 @@
       </PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\box2d\Include;$(SolutionDir)3rdParty\SDL2\Include;$(SolutionDir)3rdParty\SDL2_image\Include;$(SolutionDir)3rdParty\SDL2_mixer\Include;$(SolutionDir)3rdParty\SDL2_net\Include;$(SolutionDir)3rdParty\SDL2_ttf\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ObjectFileName>$(IntDir)</ObjectFileName>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\box2d\Lib;$(SolutionDir)3rdParty\SDL2\Lib;$(SolutionDir)3rdParty\SDL2_image\Lib;$(SolutionDir)3rdParty\SDL2_mixer\Lib;$(SolutionDir)3rdParty\SDL2_net\Lib;$(SolutionDir)3rdParty\SDL2_ttf\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>box2d_x86.lib;SDL2_x86.lib;SDL2_image_x86.lib;SDL2_mixer_x86.lib;SDL2_net_x86.lib;SDL2_ttf_x86.lib;Imagehlp.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Shlwapi.lib;box2d_x86.lib;SDL2_x86.lib;SDL2_image_x86.lib;SDL2_mixer_x86.lib;SDL2_net_x86.lib;SDL2_ttf_x86.lib;Imagehlp.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
@@ -145,13 +148,14 @@
       </PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\box2d\Include;$(SolutionDir)3rdParty\SDL2\Include;$(SolutionDir)3rdParty\SDL2_image\Include;$(SolutionDir)3rdParty\SDL2_mixer\Include;$(SolutionDir)3rdParty\SDL2_net\Include;$(SolutionDir)3rdParty\SDL2_ttf\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ObjectFileName>$(IntDir)</ObjectFileName>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\box2d\Lib;$(SolutionDir)3rdParty\SDL2\Lib;$(SolutionDir)3rdParty\SDL2_image\Lib;$(SolutionDir)3rdParty\SDL2_mixer\Lib;$(SolutionDir)3rdParty\SDL2_net\Lib;$(SolutionDir)3rdParty\SDL2_ttf\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>box2d_x64.lib;SDL2_x64.lib;SDL2_image_x64.lib;SDL2_mixer_x64.lib;SDL2_net_x64.lib;SDL2_ttf_x64.lib;Imagehlp.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Shlwapi.lib;box2d_x64.lib;SDL2_x64.lib;SDL2_image_x64.lib;SDL2_mixer_x64.lib;SDL2_net_x64.lib;SDL2_ttf_x64.lib;Imagehlp.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
@@ -168,6 +172,7 @@
       </PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\box2d\Include;$(SolutionDir)3rdParty\SDL2\Include;$(SolutionDir)3rdParty\SDL2_image\Include;$(SolutionDir)3rdParty\SDL2_mixer\Include;$(SolutionDir)3rdParty\SDL2_net\Include;$(SolutionDir)3rdParty\SDL2_ttf\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ObjectFileName>$(IntDir)</ObjectFileName>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -176,7 +181,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\box2d\Lib;$(SolutionDir)3rdParty\SDL2\Lib;$(SolutionDir)3rdParty\SDL2_image\Lib;$(SolutionDir)3rdParty\SDL2_mixer\Lib;$(SolutionDir)3rdParty\SDL2_net\Lib;$(SolutionDir)3rdParty\SDL2_ttf\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>box2d_x86.lib;SDL2_x86.lib;SDL2_image_x86.lib;SDL2_mixer_x86.lib;SDL2_net_x86.lib;SDL2_ttf_x86.lib;Imagehlp.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Shlwapi.lib;box2d_x86.lib;SDL2_x86.lib;SDL2_image_x86.lib;SDL2_mixer_x86.lib;SDL2_net_x86.lib;SDL2_ttf_x86.lib;Imagehlp.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
@@ -193,6 +198,7 @@
       </PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\box2d\Include;$(SolutionDir)3rdParty\SDL2\Include;$(SolutionDir)3rdParty\SDL2_image\Include;$(SolutionDir)3rdParty\SDL2_mixer\Include;$(SolutionDir)3rdParty\SDL2_net\Include;$(SolutionDir)3rdParty\SDL2_ttf\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ObjectFileName>$(IntDir)</ObjectFileName>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -201,7 +207,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\box2d\Lib;$(SolutionDir)3rdParty\SDL2\Lib;$(SolutionDir)3rdParty\SDL2_image\Lib;$(SolutionDir)3rdParty\SDL2_mixer\Lib;$(SolutionDir)3rdParty\SDL2_net\Lib;$(SolutionDir)3rdParty\SDL2_ttf\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>box2d_x64.lib;SDL2_x64.lib;SDL2_image_x64.lib;SDL2_mixer_x64.lib;SDL2_net_x64.lib;SDL2_ttf_x64.lib;Imagehlp.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Shlwapi.lib;box2d_x64.lib;SDL2_x64.lib;SDL2_image_x64.lib;SDL2_mixer_x64.lib;SDL2_net_x64.lib;SDL2_ttf_x64.lib;Imagehlp.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
