@@ -12,22 +12,61 @@
 
 EngineInitSettings settings;
 
+#define GetAbsolute(x) x < 0 ? -x : x
+
+#define Clamp(x, min, max) if(x < min) x = min; else if (x > max) x = max;
+
+float Lerp(float a, float b, float f)
+{
+    return (1 - f) * a + f * b;
+}
+
+float randomFloat(float a, float b)
+{
+    return ((b - a) * ((float)rand() / RAND_MAX)) + a;
+}
+
+struct FlappyBox
+{
+    float currentPos;
+    float holePos;
+    float holeSize;
+
+    bool operator==(FlappyBox a) const
+    {
+        return (this->currentPos == a.currentPos && this->holePos == a.holePos && this->holeSize == a.holeSize);
+    }
+};
+
 class MyGame : public S2DGame
 {
 public:
     S2DFont font;
-    S2DSprite doomguy;
-    S2DSprite test;
+    S2DSprite player;
 
-    S2DAudioClip clip;
+    std::vector<FlappyBox*> pillars;
+
+    S2DAudioClip jumpClip;
+    S2DAudioClip hitClip;
+    S2DAudioClip reachClip;
 
     S2DMusicClip music;
 
     S2DCamera cam;
+
+    Vec2 playerPos = Vec2(0, 0);
+    Vec2 playerVelocity = Vec2(0, 0);
+    Vec2 playerVelocityLimit = Vec2(0, 0.5f);
+
+    float desiredPlayerAngle = 0;
+
+    float playerAngle = 0;
+
+    float playerSpeed = 0.25f;
+
+    bool playerAlive = true;
     
     int sndVolume = 100, musVolume = 55;
-
-    uintptr_t groundBox = -1, dynBox = -1;
 
     // Here goes all the initialization stuff
     void OnInit() override
@@ -39,24 +78,20 @@ public:
 
         ImGui::StyleColorsDark();
 
-        /*S2DInput::ShowCursor(false);
-        S2DInput::LockCursor(true);*/
+        S2DInput::ShowCursor(false);
+        S2DInput::LockCursor(true);
 
         ImGui_ImplSDL2_InitForD3D(Graphics->GetWindow());
         ImGui_ImplDX9_Init(Graphics->GetDX9Device());
 
         font = S2DFont(Graphics->GetRenderer(), "Ubuntu.ttf");
-        doomguy = S2DSprite(Graphics->LoadTextureRaw("doomguy.png"), { {41, 56}, {37, 56}, {38, 56}, {40, 55} }, 15);
-        test = S2DSprite(Graphics->LoadTextureRaw("TestSprite.png"), { {128, 128} }, 15);
 
-        groundBox = Physics->CreateStaticBox(Vec2(0, -8.0f), Vec2(8, 2), Vec2(0.5f, 0.5f), 0);
+        player = S2DSprite(Graphics->LoadTextureRaw("data\\sprites\\player.png"), { {17, 18}, {17, 18}, {17, 18} }, 15);
 
-        dynBox = Physics->CreateDynamicBox(Vec2(0, 4.5f), Vec2(1, 1), Vec2(0.5f, 0.5f), 0);
+        jumpClip = S2DAudioClip("data\\sounds\\Jump.wav");
+        hitClip = S2DAudioClip("data\\sounds\\Hit.wav");
+        reachClip = S2DAudioClip("data\\sounds\\Reached100.wav");
 
-        clip = S2DAudioClip("test2.wav");
-        music = S2DMusicClip("de1m4.ogg");
-
-        S2DAudio::SetMusicClip(&music, true);
         S2DAudio::SetAudioVolume(sndVolume);
         S2DAudio::SetMusicVolume(musVolume);
     }
@@ -70,15 +105,13 @@ public:
     // Here comes all the reload stuff
     void OnRenderReload() override
     {
-        doomguy = S2DSprite(Graphics->LoadTextureRaw("doomguy.png"), { {41, 56}, {37, 56}, {38, 56}, {40, 55} }, 15);
+        player = S2DSprite(Graphics->LoadTextureRaw("data\\sprites\\player.png"), { {17, 18}, {17, 18}, {17, 18} }, 15);
+        font.UpdateRenderer(Graphics->GetRenderer());
     }
 
     // Here goes all the cleanup stuff
     void OnQuit() override
     {
-        Physics->DeleteBox(groundBox);
-        Physics->DeleteBox(dynBox);
-
         ImGui_ImplDX9_Shutdown();
         ImGui_ImplSDL2_Shutdown();
         ImGui::DestroyContext();
@@ -93,134 +126,130 @@ public:
     {
         ImGui_ImplDX9_Shutdown();
     }
-
-    float curX1 = 0;
-    float curY1 = 0;
-
-    float curX2 = 0;
-    float curY2 = 0;
-
-    float curX3 = 0;
-    float curY3 = 0;
-
-    Vec2 physPos = Vec2();
-    float physAngle;
-
-    Color myColor = Color::White();
-
-    bool cursorEnabled = true;
+    
+    float pillarTimer = 0;
 
     // Here goes all the game update stuff
     void OnUpdate() override
     {
-        if (!cursorEnabled)
+        pillarTimer += GetDeltaTime();
+
+        if (pillarTimer >= 1.75f - (playerSpeed / 2) && playerAlive)
         {
-            curX3 += S2DInput::GetMouseDelta()->x / 32.0f;
-            curY3 += S2DInput::GetMouseDelta()->y / 32.0f;
+            FlappyBox* box = new FlappyBox {12.5f, randomFloat(-4.5f, 4.25f), 3.35f};
 
-            /*curX3 = S2DInput::GetMousePosition()->x;
-            curY3 = S2DInput::GetMousePosition()->y;*/
+            pillars.push_back(box);
 
-            if (S2DInput::GetMouseButtonDown(MouseButton::Left))
-            {
-                myColor = Color::Red();
-            }
-            else if (S2DInput::GetMouseButtonDown(MouseButton::Middle))
-            {
-                myColor = Color::Green();
-            }
-            else if (S2DInput::GetMouseButtonDown(MouseButton::Right))
-            {
-                myColor = Color::Blue();
-            }
-
-            if (S2DInput::GetKey(InputKey::W))
-            {
-                curY1 -= 0.25f;
-            }
-            if (S2DInput::GetKey(InputKey::S))
-            {
-                curY1 += 0.25f;
-            }
-            if (S2DInput::GetKey(InputKey::A))
-            {
-                curX1 -= 0.25f;
-            }
-            if (S2DInput::GetKey(InputKey::D))
-            {
-                curX1 += 0.25f;
-            }
-
-            if (S2DInput::GetKey(InputKey::Up))
-            {
-                curY2 += 0.25f;
-            }
-            if (S2DInput::GetKey(InputKey::Down))
-            {
-                curY2 -= 0.25f;
-            }
-            if (S2DInput::GetKey(InputKey::Left))
-            {
-                curX2 -= 0.25f;
-            }
-            if (S2DInput::GetKey(InputKey::Right))
-            {
-                curX2 += 0.25f;
-            }
+            pillarTimer = 0;
         }
-        
-        if (S2DInput::GetKeyDown(InputKey::Space))
+
+        if (playerAlive)
         {
-            S2DAudio::PlayAudioClip(&clip);
+            if (playerVelocity.y > -playerVelocityLimit.y)
+                playerVelocity.y -= 0.05f;
         }
+        else
+        {
+            if (playerVelocity.y > -playerVelocityLimit.y * 1.75f)
+                playerVelocity.y -= 0.15f;
+        }
+
+        if (S2DInput::GetKeyDown(InputKey::Space) && playerAlive)
+        {
+            S2DAudio::PlayAudioClip(&jumpClip);
+            playerVelocity.y = 0.5f;
+        }
+
+        if (S2DInput::GetKeyDown(InputKey::Tab))
+        {
+            S2DInput::LockCursor(!S2DInput::IsCursorLocked());
+        }
+
+        if (S2DInput::GetKeyDown(InputKey::R))
+        {
+            for (auto b : pillars)
+            {
+                delete b;
+            }
+            pillars.clear();
+
+            player.SetFrame(0);
+            playerAlive = true;
+            playerSpeed = 0.25f;
+            playerPos.y = 0;
+            playerAngle = 0;
+            playerVelocity.y = 0;
+        }
+
+        playerAngle = -(playerVelocity.y * 90.0f);
 
         if (S2DInput::GetKeyDown(InputKey::Escape))
         {
             Quit();
         }
 
-        if (S2DInput::GetKeyDown(InputKey::Tab))
+        if (playerAlive)
         {
-            S2DInput::LockCursor(!S2DInput::IsCursorLocked());
-            cursorEnabled = !cursorEnabled;
+            for (auto b : pillars)
+            {
+                if (b->currentPos <= -12.5f)
+                {
+                    pillars.erase(std::remove(pillars.begin(), pillars.end(), b), pillars.end());
+                    delete b;
+                }
+                else
+                    b->currentPos -= 0.15f * playerSpeed;
+            }
         }
-
-        cam.Position.x = curX2;
-        cam.Position.y = curY2;
-
-        physPos = Physics->GetBoxPos(dynBox);
-        physAngle = Physics->GetBoxAngle(dynBox);
+        
+        if (!isMovingPlayer)
+        {
+            playerPos.y -= playerVelocity.y;
+            Clamp(playerPos.y, -7.5f, 7.5f);
+        }
+            
+        if ((playerPos.y >= 7.5f || playerPos.y <= -7.5f) && playerAlive)
+        {
+            player.SetFrame(1);
+            S2DAudio::PlayAudioClip(&hitClip);
+            playerAlive = false;
+        }
 
         time += GetDeltaTime();
         fpsTime += GetDeltaTime();
+
+        if (playerAlive && playerSpeed < 2.15f)
+            playerSpeed = Lerp(playerSpeed, playerSpeed + 0.005f, 1.25f * GetDeltaTime());
+        else
+            playerSpeed = 0;
     }
 
     float time = 0;
     float fpsTime = 0;
 
     char frameRateText[256];
+    char playerMovingText[256];
+    char pillarsText[256];
 
-    char cursorText[256];
+    char testBuildText[256];
 
-    char posText[256];
-    char physText[256];
+    bool isMovingPlayer = false;
 
     // Here goes all the rendering stuff
     void OnRender() override
     {
-        if (time >= 0.15f)
+        Graphics->RenderSprite(&cam, &player, playerPos, Vec2(0.5, 0.5), Vec2(64, 64), playerAngle, TexFlipMode::None, Color::White());
+
+        for (auto b : pillars)
         {
-            doomguy.NextFrame();
-            time = 0;
+            std::vector<FlappyBox*>::iterator it = std::find(pillars.begin(), pillars.end(), b);
+
+            if (it != pillars.end())
+                OutputDebugStringA(("#" + std::to_string(std::distance(pillars.begin(), it)) + " {" + std::to_string(b->currentPos) + "}\n").c_str());
+
+            Graphics->RenderFilledBox(&cam, Vec2(b->currentPos, b->holePos), Vec2(0.5f, 1.0f), Vec2(150, 1024), Color::Green());
+            Graphics->RenderFilledBox(&cam, Vec2(b->currentPos, b->holePos + b->holeSize), Vec2(0.5f, 0), Vec2(150, 1024), Color::Green());
         }
-
-        Graphics->RenderSprite(&cam, &test, physPos, Vec2(0.5f, 0.5f), Vec2(16, 16), physAngle, TexFlipMode::None, Color::Red());
-        Graphics->RenderFilledBox(&cam, Vec2(0, -8.0f), Vec2(0.5f, 0.5f), Vec2(128, 16), Color::Green());
-
-        Graphics->RenderSprite(&cam ,&doomguy, Vec2(curX1, curY1), Vec2(0.5, 1), Vec2(76, 112), 0, TexFlipMode::None, Color::White());
-        //Graphics->RenderFilledBox(Vec2(curX1, curY1), Vec2(64, 64), Color::Red());
-        //Graphics->RenderFilledBox(&cam, Vec2(curX2, curY2), Vec2(2.5, 2.5), Vec2(64, 64), Color::Green());
-        Graphics->RenderFilledBox(&cam, Vec2(curX3, curY3), Vec2(0.5, 0.5), Vec2(32, 32), myColor);
 
         if (fpsTime >= 0.075f)
         {
@@ -228,32 +257,49 @@ public:
             fpsTime = 0;
         }
 
-        sprintf(cursorText, "Cursor enabled: %s, Cursor position: [%d, %d]", cursorEnabled ? "Yes" : "No", S2DInput::GetMousePosition()->x, S2DInput::GetMousePosition()->y);
-        sprintf(posText, "Player position: [%.2f, %.2f], Box position: [%.2f, %.2f], Camera position: [%.2f, %.2f]", curX1, curY1, curX3, curY3, curX2, curY2);
+        sprintf(testBuildText, "This is a test project of Seven2D Game Engine");
+        sprintf(playerMovingText, "Movement speed: %f", playerSpeed);
+        sprintf(pillarsText, "Spawned pillars: %d", pillars.size());
 
-        sprintf(physText, "Physics position: [%.2f, %.2f], Physics angle: %.2f", physPos.x, physPos.y, physAngle);
+        auto size = font.GetSize(20, frameRateText);
 
-        auto size = font.GetSize(20, cursorText);
+        auto textSize = font.GetSize(16, testBuildText);
 
         font.Render(20, frameRateText, Vec2(0, 0), Vec2(0, 0), 0, TexFlipMode::None, Color::White());
-        font.Render(20, cursorText, Vec2(0, size.y + 6), Vec2(0, 0), 0, TexFlipMode::None, Color::White());
-        font.Render(20, posText, Vec2(0, (size.y * 2) + 6), Vec2(0, 0), 0, TexFlipMode::None, Color::White());
-        font.Render(20, physText, Vec2(0, (size.y * 3) + 6), Vec2(0, 0), 0, TexFlipMode::None, Color::White());
+        font.Render(20, playerMovingText, Vec2(0, size.y + 6), Vec2(0, 0), 0, TexFlipMode::None, Color::White());
+        font.Render(20, pillarsText, Vec2(0, size.y * 2 + 12), Vec2(0, 0), 0, TexFlipMode::None, Color::White());
+        font.Render(16, testBuildText, Vec2(Graphics->GetCurrentWindowSize().x - textSize.x - 6, Graphics->GetCurrentWindowSize().y - textSize.y - 6), Vec2(0, 0), 0, TexFlipMode::None, Color::White());
 
         ImGui_ImplDX9_NewFrame();
         ImGui_ImplSDL2_NewFrame(Graphics->GetWindow());
         ImGui::NewFrame();
 
-        if (ImGui::Begin("Audio Settings", NULL, ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_AlwaysAutoResize))
-        {
-            if (ImGui::SliderInt("SFX Volume", &sndVolume, 0, 100, "%d%%"))
-                S2DAudio::SetAudioVolume(sndVolume);
-            if (ImGui::SliderInt("Music Volume", &musVolume, 0, 100, "%d%%"))
-                S2DAudio::SetMusicVolume(musVolume);
-            
-        }
+        /*if (ImGui::Begin("Player", (bool*)0, ImGuiWindowFlags_AlwaysAutoResize))
+        {  
+            if (ImGui::IsWindowFocused())
+            {
+                isMovingPlayer = true;
+            }
+            else
+            {
+                isMovingPlayer = false;
+            }
 
-        if (ImGui::Begin("About this Project", NULL, ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_AlwaysAutoResize))
+            std::vector<float*> pos = { &playerPos.x, &playerPos.y };
+
+            std::vector<ImU32> colors = { 
+                0xBB0000FF, // red
+                0xBB00FF00, // green
+                0xBBFF0000, // blue
+                0xBBFFFFFF, // white for alpha?
+            };
+
+            ImGui::DragFloatN_Colored("Position", pos, colors, 0.01f, -15000.0f, 15000.0f, "%.3f", 1.0f);
+
+            ImGui::End();
+        }*/
+
+        /*if (ImGui::Begin("About this Project", NULL, ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_AlwaysAutoResize))
         {
             ImGui::Text("Seven2D (S2D) Game Engine");
             ImGui::Text("Created by Sevenisko");
@@ -311,7 +357,7 @@ public:
 
                 ImGui::TreePop();
             }
-        }
+        }*/
 
         ImGui::Render();
         ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
@@ -322,7 +368,7 @@ public:
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
-    settings = { "S2D Test Game", 0, new ScreenResolution {1600, 900}, true };
+    settings = { "Flappy Guy - S2D Game Test", 0, new ScreenResolution {1600, 900}, true };
     MyGame* game = new MyGame();
-    game->Run();
+    game->Run(nullptr);
 }

@@ -10,6 +10,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestGame", "TestGame\TestGa
 		{80D01E52-6D55-451A-A69E-AFFFF2545AE7} = {80D01E52-6D55-451A-A69E-AFFFF2545AE7}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GameStudio", "GameStudio\GameStudio.vcxproj", "{7D028D85-2B49-4A77-A0F6-66EA275EBB04}"
+	ProjectSection(ProjectDependencies) = postProject
+		{80D01E52-6D55-451A-A69E-AFFFF2545AE7} = {80D01E52-6D55-451A-A69E-AFFFF2545AE7}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -34,6 +39,14 @@ Global
 		{1E06A847-12B9-4034-B3AB-4BC1C67AE352}.Release|x64.Build.0 = Release|x64
 		{1E06A847-12B9-4034-B3AB-4BC1C67AE352}.Release|x86.ActiveCfg = Release|Win32
 		{1E06A847-12B9-4034-B3AB-4BC1C67AE352}.Release|x86.Build.0 = Release|Win32
+		{7D028D85-2B49-4A77-A0F6-66EA275EBB04}.Debug|x64.ActiveCfg = Debug|x64
+		{7D028D85-2B49-4A77-A0F6-66EA275EBB04}.Debug|x64.Build.0 = Debug|x64
+		{7D028D85-2B49-4A77-A0F6-66EA275EBB04}.Debug|x86.ActiveCfg = Debug|Win32
+		{7D028D85-2B49-4A77-A0F6-66EA275EBB04}.Debug|x86.Build.0 = Debug|Win32
+		{7D028D85-2B49-4A77-A0F6-66EA275EBB04}.Release|x64.ActiveCfg = Release|x64
+		{7D028D85-2B49-4A77-A0F6-66EA275EBB04}.Release|x64.Build.0 = Release|x64
+		{7D028D85-2B49-4A77-A0F6-66EA275EBB04}.Release|x86.ActiveCfg = Release|Win32
+		{7D028D85-2B49-4A77-A0F6-66EA275EBB04}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

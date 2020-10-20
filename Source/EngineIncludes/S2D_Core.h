@@ -26,6 +26,12 @@ struct VersionInfo
     int build;
 };
 
+struct GameSplashScreen
+{
+    const char* imagePath;
+    int time;
+};
+
 // Default Engine Settings
 extern EngineInitSettings* defaultSettings;
 
@@ -71,7 +77,7 @@ public:
     virtual void OnRenderReload() {}
 
     // Starts the game engine
-    void Run();
+    void Run(GameSplashScreen* splash);
 
     // Quits the game engine
     void Quit();

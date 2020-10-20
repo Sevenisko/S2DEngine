@@ -1,13 +1,11 @@
 # Seven2D (S2D) Game Engine
-A Open-Source 2D Game Engine made entirely for Game Development, also for my personal usage for 2D Game Development.
+A Open-Source 2D Game Engine made entirely for 2D Game Development.
 
 ## 3rd-Party Libraries
 * [SDL2](https://www.libsdl.org/)
 * [SDL2_mixer](https://www.libsdl.org/projects/SDL_mixer/)
 * [SDL2_ttf](https://www.libsdl.org/projects/SDL_ttf/)
 * [SDL2_image](https://www.libsdl.org/projects/SDL_image/)
-* [SDL2_net](https://www.libsdl.org/projects/SDL_net/)
-* [box2d Physics Engine](https://box2d.org/)
 
 ## Engine Features
 - [x] Core Engine API
@@ -31,10 +29,8 @@ A Open-Source 2D Game Engine made entirely for Game Development, also for my per
 	- [x] Ability to play music
 	- [x] Ability to play sound files
 	- [x] Ability to set Music and Sound volume (MIDI volume control currently unavailable)
-- [x] Physics Subsystem
-  - [x] Dynamic colliders (affected by gravity, etc)
-  - [x] Static colliders
-  - [ ] Getting it fully functional
+- [ ] Physics Subsystem 
+  - **You need to implement physics by yourself at the moment...**
 
 ## How to use?
 There are three ways to use S2D Engine:

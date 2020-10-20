@@ -1356,6 +1356,7 @@ const char* ImStrSkipBlank(const char* str)
 #define STB_SPRINTF_IMPLEMENTATION
 #include "stb_sprintf.h"
 #endif
+#include <vector>
 
 #if defined(_MSC_VER) && !defined(vsnprintf)
 #define vsnprintf _vsnprintf
@@ -3323,6 +3324,51 @@ void ImGui::StartMouseMovingWindow(ImGuiWindow* window)
         can_move_window = false;
     if (can_move_window)
         g.MovingWindow = window;
+}
+
+bool ImGui::DragFloatN_Colored(const char* label, std::vector<float*> v, std::vector<ImU32> colors, float v_speed, float v_min, float v_max, const char* display_format, float power)
+{
+    ImGuiWindow* window = GetCurrentWindow();
+    if (window->SkipItems)
+        return false;
+
+    ImGuiContext& g = *GImGui;
+    bool value_changed = false;
+    BeginGroup();
+    PushID(label);
+    PushMultiItemsWidths(v.size(), 256.0f);
+    for (int i = 0; i < v.size(); i++)
+    {
+        ImU32 color;
+
+        if (i < colors.size() - 1)
+            color = colors[i];
+        else
+            color = colors[colors.size() - 1];
+             
+        PushID(i);
+        value_changed |= DragFloat("##v", v[i], v_speed, v_min, v_max, display_format, power);
+
+        
+
+        const ImVec2 min = GetItemRectMin();
+        const ImVec2 max = GetItemRectMax();
+        const float spacing = g.Style.FrameRounding;
+        const float halfSpacing = spacing / 2;
+
+        // This is the main change
+        window->DrawList->AddLine({ min.x + spacing, max.y - halfSpacing }, { max.x - spacing, max.y - halfSpacing }, color, 4);
+
+        SameLine(0, g.Style.ItemInnerSpacing.x);
+        PopID();
+        PopItemWidth();
+    }
+    PopID();
+
+    TextUnformatted(label, FindRenderedTextEnd(label));
+    EndGroup();
+
+    return value_changed;
 }
 
 // Handle mouse moving window

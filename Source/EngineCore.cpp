@@ -167,12 +167,31 @@ float S2DGame::GetFrameRate()
     return Framerate;
 }
 
-void S2DGame::Run()
+void S2DGame::Run(GameSplashScreen* splash)
 {
     SDL_Init(SDL_INIT_EVERYTHING);
     IMG_Init(NULL);
     Mix_Init(NULL);
     TTF_Init();
+
+    if (splash)
+    {
+        SDL_Surface* surface = IMG_Load(splash->imagePath);
+
+        SDL_Window* window = SDL_CreateWindow("SplashScreen", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, surface->w, surface->h, SDL_WINDOW_ALWAYS_ON_TOP | SDL_WINDOW_BORDERLESS | SDL_WINDOW_SKIP_TASKBAR);
+
+        SDL_Surface* wsurface = SDL_GetWindowSurface(window);
+
+        SDL_BlitSurface(surface, &surface->clip_rect, wsurface, &wsurface->clip_rect);
+
+        SDL_UpdateWindowSurface(window);
+
+        SDL_Delay(splash->time);
+
+        SDL_DestroyWindow(window);
+
+        SDL_FreeSurface(surface);
+    }
 
     if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 8, 4096) < 0)
         S2DFatalErrorFormatted("Cannot initalizate sound system!\n\t%s", Mix_GetError());
