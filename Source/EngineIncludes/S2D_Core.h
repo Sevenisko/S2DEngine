@@ -40,7 +40,7 @@ class DllExport S2DGame
 {
 public:
     S2DGraphics* Graphics;
-    S2DPhysics* Physics;
+    //S2DPhysics* Physics;
 
     float GetDeltaTime();
 

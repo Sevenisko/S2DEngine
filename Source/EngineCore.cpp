@@ -197,7 +197,7 @@ void S2DGame::Run(GameSplashScreen* splash)
         S2DFatalErrorFormatted("Cannot initalizate sound system!\n\t%s", Mix_GetError());
 
     Graphics = new S2DGraphics(CurrentSettings);
-    Physics = new S2DPhysics();
+    //Physics = new S2DPhysics();
     SDL_RaiseWindow(Graphics->GetWindow());
     WindowFocused = true;
 
@@ -233,7 +233,7 @@ void S2DGame::Run(GameSplashScreen* splash)
             else
                 Input::UpdateMousePos();
 
-            Physics->Update(timeStep);
+            //Physics->Update(timeStep);
 
             OnUpdate();
 

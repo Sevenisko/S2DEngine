@@ -1,5 +1,7 @@
 #include "EngineIncludes.h"
 
+#if 0
+
 namespace Physics
 {
 	std::vector<b2Body*> bodies;
@@ -89,3 +91,5 @@ void S2DPhysics::Update(float timeStep)
 {
 	Physics::b2PhysWorld->Step(timeStep, VelocityIterations, PositionIterations);
 }
+
+#endif
