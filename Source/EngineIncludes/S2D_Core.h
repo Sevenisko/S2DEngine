@@ -18,6 +18,9 @@
 #define S2D_CORE_INCLUDED
 
 #include <Windows.h>
+#include <SDL.h>
+
+typedef struct IDirect3DTexture9 IDirect3DTexture9;
 
 struct VersionInfo
 {
@@ -59,7 +62,7 @@ public:
     virtual void OnQuit() {}
 
     // This function is called when SDL event is called
-    virtual void OnSDLEvent(SDL_Event evnt) {}
+    virtual void OnSDLEvent(SDL_Event event) {}
 
     // This function is called when fucus is gained
     virtual void OnFocusGained() {}
@@ -67,14 +70,13 @@ public:
     // This function is called when focus is lost
     virtual void OnFocusLost() {}
 
-    // This function is called every frame and updates the game logic
+    // This function is called every frame (Pre-Render) and updates the game logic
     virtual void OnUpdate() {}
 
     // This function is called every frame and draws things into the buffer
     virtual void OnRender() {}
 
-    // This function is called when the renderer is being reloaded
-    virtual void OnRenderReload() {}
+    virtual void OnPostRender(S2DTexture* frame) {}
 
     // Starts the game engine
     void Run(GameSplashScreen* splash);

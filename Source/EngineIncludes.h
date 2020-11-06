@@ -21,33 +21,30 @@
     #include <SDL_image.h> 
     #include <SDL_ttf.h> 
     #include <SDL_net.h> 
+    #include <SDL_syswm.h>
+
+    #define S2D_INCLUDE_DX9
+    #define S2D_INCLUDE_SDL
 
     #include "EngineVersion.h"
     #include "EngineIncludes/S2D_Misc.h"
     #include "EngineIncludes/S2D_Graphics.h"
     #include "EngineIncludes/S2D_Input.h"
-    #include <box2d/box2d.h>
 
     #include "EngineIncludes/S2D_Audio.h"
     #include "EngineIncludes/S2D_Physics.h"
     #include "EngineIncludes/S2D_Core.h"
 
-namespace Physics
-{
-    extern std::vector<b2Body*> bodies;
-
-    extern b2Vec2 b2Gravity;
-
-    extern b2World* b2PhysWorld;
-}
+// Welp, thanks for your misclick, Davo :D
+typedef void boid;
 
 namespace Input
 {
-    extern void ProcessKey(SDL_Scancode key, bool state);
-    extern void ProcessMouseButton(MouseButton button, bool state);
-    extern void UpdateMousePos();
-    extern void UpdateMousePos(int x, int y);
-    extern void UpdateMouseDelta(int x, int y);
+    extern boid ProcessKey(SDL_Scancode key, bool state);
+    extern boid ProcessMouseButton(MouseButton button, bool state);
+    extern boid UpdateMousePos();
+    extern boid UpdateMousePos(int x, int y);
+    extern boid UpdateMouseDelta(int x, int y);
 
     extern bool mouseLocked;
 }

@@ -1,8 +1,24 @@
+/************************************************************\
+      _____ ___  _____    ______             _
+     / ____|__ \|  __ \  |  ____|           (_)
+    | (___    ) | |  | | | |__   _ __   __ _ _ _ __   ___
+     \___ \  / /| |  | | |  __| | '_ \ / _` | | '_ \ / _ \
+     ____) |/ /_| |__| | | |____| | | | (_| | | | | |  __/
+    |_____/|____|_____/  |______|_| |_|\__, |_|_| |_|\___|
+                                        __/ |
+                                       |___/
+    ======================================================
+        S2D Engine - An Open-Source 2D Game Framework
+                    Coded by Sevenisko
+
+    Purpose: The core of S2D Engine
+\************************************************************/
+
 #include "EngineIncludes.h"
 #include <string>
 #include <thread>
 
-EngineInitSettings* defaultSettings = new EngineInitSettings{ "S2D Game Engine", 0, new ScreenResolution {1280, 720}, false };
+EngineInitSettings* defaultSettings = new EngineInitSettings{ "S2D Game Engine", new ScreenResolution {1280, 720}, false, true };
 
 bool IsConsoleApp()
 {
@@ -203,8 +219,6 @@ void S2DGame::Run(GameSplashScreen* splash)
 
     OnInit();
 
-    Graphics->OnRenderReload = [&]() { OnRenderReload(); };
-
     Uint64 g_Time = 0;
 
     float timeStep = 1.0f / 60.0f;
@@ -237,9 +251,18 @@ void S2DGame::Run(GameSplashScreen* splash)
 
             OnUpdate();
 
+            //Graphics->EnableRenderTarget(true);
+
             Graphics->BeginFrame();
             OnRender();
             Graphics->EndFrame();
+
+            /*S2DTexture* scr = Graphics->GetCurrentFrame();
+
+            Graphics->EnableRenderTarget(false);
+            Graphics->BeginFrame();
+            OnPostRender(scr);
+            Graphics->EndFrame();*/
 
             // Setup time step (we don't use SDL_GetTicks() because it is using millisecond resolution)
             Uint64 frequency = SDL_GetPerformanceFrequency();

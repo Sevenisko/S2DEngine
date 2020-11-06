@@ -19,22 +19,34 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\3rdParty\ImGui\imconfig.h" />
+    <ClInclude Include="..\..\3rdParty\ImGui\imgui.h" />
+    <ClInclude Include="..\..\3rdParty\ImGui\imgui_impl_dx9.h" />
+    <ClInclude Include="..\..\3rdParty\ImGui\imgui_impl_sdl.h" />
+    <ClInclude Include="..\..\3rdParty\ImGui\imgui_internal.h" />
+    <ClInclude Include="..\..\3rdParty\ImGui\imstb_rectpack.h" />
+    <ClInclude Include="..\..\3rdParty\ImGui\imstb_textedit.h" />
+    <ClInclude Include="..\..\3rdParty\ImGui\imstb_truetype.h" />
     <ClInclude Include="..\..\Source\EngineIncludes.h" />
     <ClInclude Include="..\..\Source\EngineIncludes\S2D_Audio.h" />
     <ClInclude Include="..\..\Source\EngineIncludes\S2D_Core.h" />
     <ClInclude Include="..\..\Source\EngineIncludes\S2D_Graphics.h" />
     <ClInclude Include="..\..\Source\EngineIncludes\S2D_Input.h" />
     <ClInclude Include="..\..\Source\EngineIncludes\S2D_Misc.h" />
-    <ClInclude Include="..\..\Source\EngineIncludes\S2D_Physics.h" />
     <ClInclude Include="..\..\Source\EngineVersion.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\3rdParty\ImGui\imgui.cpp" />
+    <ClCompile Include="..\..\3rdParty\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="..\..\3rdParty\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="..\..\3rdParty\ImGui\imgui_impl_dx9.cpp" />
+    <ClCompile Include="..\..\3rdParty\ImGui\imgui_impl_sdl.cpp" />
+    <ClCompile Include="..\..\3rdParty\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="..\..\Source\EngineAudio.cpp" />
     <ClCompile Include="..\..\Source\EngineCore.cpp" />
     <ClCompile Include="..\..\Source\EngineGraphics.cpp" />
     <ClCompile Include="..\..\Source\EngineInput.cpp" />
-    <ClCompile Include="..\..\Source\EnginePhysics.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="S2D.rc" />
@@ -124,7 +136,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\box2d\Include;$(SolutionDir)3rdParty\SDL2\Include;$(SolutionDir)3rdParty\SDL2_image\Include;$(SolutionDir)3rdParty\SDL2_mixer\Include;$(SolutionDir)3rdParty\SDL2_net\Include;$(SolutionDir)3rdParty\SDL2_ttf\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;$(SolutionDir)3rdParty\box2d\Include;$(SolutionDir)3rdParty\SDL2\Include;$(SolutionDir)3rdParty\SDL2_image\Include;$(SolutionDir)3rdParty\SDL2_mixer\Include;$(SolutionDir)3rdParty\SDL2_net\Include;$(SolutionDir)3rdParty\SDL2_ttf\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
@@ -132,8 +144,8 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\box2d\Lib;$(SolutionDir)3rdParty\SDL2\Lib;$(SolutionDir)3rdParty\SDL2_image\Lib;$(SolutionDir)3rdParty\SDL2_mixer\Lib;$(SolutionDir)3rdParty\SDL2_net\Lib;$(SolutionDir)3rdParty\SDL2_ttf\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Shlwapi.lib;SDL2_x86.lib;SDL2_image_x86.lib;SDL2_mixer_x86.lib;SDL2_ttf_x86.lib;Imagehlp.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86;$(SolutionDir)3rdParty\box2d\Lib;$(SolutionDir)3rdParty\SDL2\Lib;$(SolutionDir)3rdParty\SDL2_image\Lib;$(SolutionDir)3rdParty\SDL2_mixer\Lib;$(SolutionDir)3rdParty\SDL2_net\Lib;$(SolutionDir)3rdParty\SDL2_ttf\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>d3d9.lib;d3dx9.lib;Shlwapi.lib;SDL2_x86.lib;SDL2_image_x86.lib;SDL2_mixer_x86.lib;SDL2_ttf_x86.lib;Imagehlp.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
@@ -146,7 +158,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\box2d\Include;$(SolutionDir)3rdParty\SDL2\Include;$(SolutionDir)3rdParty\SDL2_image\Include;$(SolutionDir)3rdParty\SDL2_mixer\Include;$(SolutionDir)3rdParty\SDL2_net\Include;$(SolutionDir)3rdParty\SDL2_ttf\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;$(SolutionDir)3rdParty\box2d\Include;$(SolutionDir)3rdParty\SDL2\Include;$(SolutionDir)3rdParty\SDL2_image\Include;$(SolutionDir)3rdParty\SDL2_mixer\Include;$(SolutionDir)3rdParty\SDL2_net\Include;$(SolutionDir)3rdParty\SDL2_ttf\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
@@ -154,8 +166,8 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\box2d\Lib;$(SolutionDir)3rdParty\SDL2\Lib;$(SolutionDir)3rdParty\SDL2_image\Lib;$(SolutionDir)3rdParty\SDL2_mixer\Lib;$(SolutionDir)3rdParty\SDL2_net\Lib;$(SolutionDir)3rdParty\SDL2_ttf\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Shlwapi.lib;SDL2_x64.lib;SDL2_image_x64.lib;SDL2_mixer_x64.lib;SDL2_ttf_x64.lib;Imagehlp.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x64;$(SolutionDir)3rdParty\box2d\Lib;$(SolutionDir)3rdParty\SDL2\Lib;$(SolutionDir)3rdParty\SDL2_image\Lib;$(SolutionDir)3rdParty\SDL2_mixer\Lib;$(SolutionDir)3rdParty\SDL2_net\Lib;$(SolutionDir)3rdParty\SDL2_ttf\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>d3d9.lib;d3dx9.lib;Shlwapi.lib;SDL2_x64.lib;SDL2_image_x64.lib;SDL2_mixer_x64.lib;SDL2_ttf_x64.lib;Imagehlp.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
@@ -170,7 +182,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\box2d\Include;$(SolutionDir)3rdParty\SDL2\Include;$(SolutionDir)3rdParty\SDL2_image\Include;$(SolutionDir)3rdParty\SDL2_mixer\Include;$(SolutionDir)3rdParty\SDL2_net\Include;$(SolutionDir)3rdParty\SDL2_ttf\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;$(SolutionDir)3rdParty\box2d\Include;$(SolutionDir)3rdParty\SDL2\Include;$(SolutionDir)3rdParty\SDL2_image\Include;$(SolutionDir)3rdParty\SDL2_mixer\Include;$(SolutionDir)3rdParty\SDL2_net\Include;$(SolutionDir)3rdParty\SDL2_ttf\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
@@ -180,8 +192,8 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\box2d\Lib;$(SolutionDir)3rdParty\SDL2\Lib;$(SolutionDir)3rdParty\SDL2_image\Lib;$(SolutionDir)3rdParty\SDL2_mixer\Lib;$(SolutionDir)3rdParty\SDL2_net\Lib;$(SolutionDir)3rdParty\SDL2_ttf\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Shlwapi.lib;SDL2_x86.lib;SDL2_image_x86.lib;SDL2_mixer_x86.lib;SDL2_ttf_x86.lib;Imagehlp.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86;$(SolutionDir)3rdParty\box2d\Lib;$(SolutionDir)3rdParty\SDL2\Lib;$(SolutionDir)3rdParty\SDL2_image\Lib;$(SolutionDir)3rdParty\SDL2_mixer\Lib;$(SolutionDir)3rdParty\SDL2_net\Lib;$(SolutionDir)3rdParty\SDL2_ttf\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>d3d9.lib;d3dx9.lib;Shlwapi.lib;SDL2_x86.lib;SDL2_image_x86.lib;SDL2_mixer_x86.lib;SDL2_ttf_x86.lib;Imagehlp.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
@@ -196,7 +208,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\box2d\Include;$(SolutionDir)3rdParty\SDL2\Include;$(SolutionDir)3rdParty\SDL2_image\Include;$(SolutionDir)3rdParty\SDL2_mixer\Include;$(SolutionDir)3rdParty\SDL2_net\Include;$(SolutionDir)3rdParty\SDL2_ttf\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;$(SolutionDir)3rdParty\box2d\Include;$(SolutionDir)3rdParty\SDL2\Include;$(SolutionDir)3rdParty\SDL2_image\Include;$(SolutionDir)3rdParty\SDL2_mixer\Include;$(SolutionDir)3rdParty\SDL2_net\Include;$(SolutionDir)3rdParty\SDL2_ttf\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
@@ -206,8 +218,8 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\box2d\Lib;$(SolutionDir)3rdParty\SDL2\Lib;$(SolutionDir)3rdParty\SDL2_image\Lib;$(SolutionDir)3rdParty\SDL2_mixer\Lib;$(SolutionDir)3rdParty\SDL2_net\Lib;$(SolutionDir)3rdParty\SDL2_ttf\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Shlwapi.lib;SDL2_x64.lib;SDL2_image_x64.lib;SDL2_mixer_x64.lib;SDL2_ttf_x64.lib;Imagehlp.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x64;$(SolutionDir)3rdParty\box2d\Lib;$(SolutionDir)3rdParty\SDL2\Lib;$(SolutionDir)3rdParty\SDL2_image\Lib;$(SolutionDir)3rdParty\SDL2_mixer\Lib;$(SolutionDir)3rdParty\SDL2_net\Lib;$(SolutionDir)3rdParty\SDL2_ttf\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>d3d9.lib;d3dx9.lib;Shlwapi.lib;SDL2_x64.lib;SDL2_image_x64.lib;SDL2_mixer_x64.lib;SDL2_ttf_x64.lib;Imagehlp.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>

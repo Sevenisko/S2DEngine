@@ -28,9 +28,9 @@
 
 #define S2DAssert(expression) if(!expression) { if(IsConsoleApp()) {printf("File: %s\nLine: %d\n\t %s", __FILE__, __LINE__, #expression); abort(); } else { char msg[128]; sprintf(msg, "File: %s\nLine: %d\n\t %s", __FILE__, __LINE__, #expression);  MessageBoxA(NULL, msg, "S2D Assert Failure", MB_OK | MB_ICONERROR); ExitProcess(1); } }
 
-#define S2DFatalError(message) if(IsConsoleApp()) {printf("Fatal Error: %s", message); abort(); } else { char msg[128]; sprintf(msg, "Fatal Error: %s", message);  MessageBoxA(NULL, msg, "Error", MB_OK | MB_ICONERROR); ExitProcess(1); }
+#define S2DFatalError(message) if(IsConsoleApp()) {printf("Fatal Error: %s", message); abort(); } else { MessageBoxA(NULL, message, "Fatal Error", MB_OK | MB_ICONERROR); ExitProcess(1); }
 
-#define S2DFatalErrorFormatted(message, ...) if(IsConsoleApp()) {char msg[256]; sprintf(msg, message, ##__VA_ARGS__); printf("Fatal Error: %s", msg); abort(); } else { char msg[256]; sprintf(msg, message, ##__VA_ARGS__); char msg2[512]; sprintf(msg2, "Fatal Error: %s", msg);  MessageBoxA(NULL, msg2, "Error", MB_OK | MB_ICONERROR); ExitProcess(1); }
+#define S2DFatalErrorFormatted(message, ...) if(IsConsoleApp()) {char msg[256]; sprintf(msg, message, ##__VA_ARGS__); printf("Fatal Error: %s", msg); abort(); } else { char msg[256]; sprintf(msg, message, ##__VA_ARGS__); MessageBoxA(NULL, msg, "Fatal Error", MB_OK | MB_ICONERROR); ExitProcess(1); }
 
 #define S2DMsgBox(message, ...) \
 char msg[256];\

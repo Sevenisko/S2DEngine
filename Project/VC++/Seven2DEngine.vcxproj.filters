@@ -7,6 +7,12 @@
     <Filter Include="Engine Code">
       <UniqueIdentifier>{1e618e89-f4c3-4837-b7d3-a6e5f5309510}</UniqueIdentifier>
     </Filter>
+    <Filter Include="3rd-Party Code">
+      <UniqueIdentifier>{fd23dee3-47b0-4d39-9383-3c9027efc34d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rd-Party Code\ImGui">
+      <UniqueIdentifier>{d93d69ff-a230-415f-b23e-48da4bc6a6f0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\EngineIncludes\S2D_Core.h">
@@ -24,27 +30,63 @@
       <Filter>Engine Includes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\EngineVersion.h" />
-    <ClInclude Include="..\..\Source\EngineIncludes\S2D_Physics.h">
-      <Filter>Engine Includes</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\EngineIncludes\S2D_Audio.h">
       <Filter>Engine Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\3rdParty\ImGui\imconfig.h">
+      <Filter>3rd-Party Code\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\3rdParty\ImGui\imgui.h">
+      <Filter>3rd-Party Code\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\3rdParty\ImGui\imgui_impl_dx9.h">
+      <Filter>3rd-Party Code\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\3rdParty\ImGui\imgui_impl_sdl.h">
+      <Filter>3rd-Party Code\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\3rdParty\ImGui\imgui_internal.h">
+      <Filter>3rd-Party Code\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\3rdParty\ImGui\imstb_rectpack.h">
+      <Filter>3rd-Party Code\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\3rdParty\ImGui\imstb_textedit.h">
+      <Filter>3rd-Party Code\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\3rdParty\ImGui\imstb_truetype.h">
+      <Filter>3rd-Party Code\ImGui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\EngineCore.cpp">
       <Filter>Engine Code</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\EngineGraphics.cpp">
-      <Filter>Engine Code</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\EngineInput.cpp">
       <Filter>Engine Code</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\EnginePhysics.cpp">
+    <ClCompile Include="..\..\Source\EngineAudio.cpp">
       <Filter>Engine Code</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\EngineAudio.cpp">
+    <ClCompile Include="..\..\3rdParty\ImGui\imgui.cpp">
+      <Filter>3rd-Party Code\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\3rdParty\ImGui\imgui_demo.cpp">
+      <Filter>3rd-Party Code\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\3rdParty\ImGui\imgui_draw.cpp">
+      <Filter>3rd-Party Code\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\3rdParty\ImGui\imgui_impl_dx9.cpp">
+      <Filter>3rd-Party Code\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\3rdParty\ImGui\imgui_impl_sdl.cpp">
+      <Filter>3rd-Party Code\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\3rdParty\ImGui\imgui_widgets.cpp">
+      <Filter>3rd-Party Code\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\EngineGraphics.cpp">
       <Filter>Engine Code</Filter>
     </ClCompile>
   </ItemGroup>

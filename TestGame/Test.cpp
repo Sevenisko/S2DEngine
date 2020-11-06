@@ -4,11 +4,12 @@
 #include <S2D_Physics.h>
 #include <S2D_Audio.h>
 #include <S2D_Core.h>
-#include "../ImGui/imgui.h"
+/*#include "../ImGui/imgui.h"
 #include "../ImGui/imgui_impl_sdl.h"
-#include "../ImGui/imgui_impl_dx9.h"
+#include "../ImGui/imgui_impl_dx9.h"*/
 #include <string>
 #include <ctgmath>
+#include <time.h>
 
 EngineInitSettings settings;
 
@@ -46,13 +47,17 @@ public:
 
     std::vector<FlappyBox*> pillars;
 
+    IDirect3DTexture9* dxTex;
+
+    S2DTexture* tex;
+
     S2DAudioClip jumpClip;
     S2DAudioClip hitClip;
     S2DAudioClip reachClip;
 
     S2DMusicClip music;
 
-    S2DCamera cam;
+    S2DCamera* cam;
 
     Vec2 playerPos = Vec2(0, 0);
     Vec2 playerVelocity = Vec2(0, 0);
@@ -71,22 +76,26 @@ public:
     // Here goes all the initialization stuff
     void OnInit() override
     {
-        IMGUI_CHECKVERSION();
-        ImGui::CreateContext();
+        /*IMGUI_CHECKVERSION();
+        ImGui::CreateContext();*/
 
-        cam.Position = Vec2(0, 0);
+        cam = new S2DCamera();
 
-        ImGui::StyleColorsDark();
+        cam->Position = Vec2(0, 0);
+
+        //ImGui::StyleS2DColorsDark();
 
         S2DInput::ShowCursor(false);
         S2DInput::LockCursor(true);
 
-        ImGui_ImplSDL2_InitForD3D(Graphics->GetWindow());
-        ImGui_ImplDX9_Init(Graphics->GetDX9Device());
+        /*ImGui_ImplSDL2_InitForD3D(Graphics->GetWindow());
+        ImGui_ImplDX9_Init(Graphics->GetDX9Device());*/
 
-        font = S2DFont(Graphics->GetRenderer(), "Ubuntu.ttf");
+        font = S2DFont("Arial", 16, false);
 
-        player = S2DSprite(Graphics->LoadTextureRaw("data\\sprites\\player.png"), { {17, 18}, {17, 18}, {17, 18} }, 15);
+        player = S2DSprite(Graphics->LoadTexture("data\\sprites\\player.png"), { {17, 18}, {17, 18}, {17, 18} }, 15);
+
+        tex = Graphics->LoadTexture("data\\testscreen.png");
 
         jumpClip = S2DAudioClip("data\\sounds\\Jump.wav");
         hitClip = S2DAudioClip("data\\sounds\\Hit.wav");
@@ -94,37 +103,32 @@ public:
 
         S2DAudio::SetAudioVolume(sndVolume);
         S2DAudio::SetMusicVolume(musVolume);
+
+        Graphics->SetCamera(cam);
     }
 
     // Here goes all the SDL Event stuff
     void OnSDLEvent(SDL_Event evnt) override
     {
-        ImGui_ImplSDL2_ProcessEvent(&evnt);
-    }
-
-    // Here comes all the reload stuff
-    void OnRenderReload() override
-    {
-        player = S2DSprite(Graphics->LoadTextureRaw("data\\sprites\\player.png"), { {17, 18}, {17, 18}, {17, 18} }, 15);
-        font.UpdateRenderer(Graphics->GetRenderer());
+        //ImGui_ImplSDL2_ProcessEvent(&evnt);
     }
 
     // Here goes all the cleanup stuff
     void OnQuit() override
     {
-        ImGui_ImplDX9_Shutdown();
+        /*ImGui_ImplDX9_Shutdown();
         ImGui_ImplSDL2_Shutdown();
-        ImGui::DestroyContext();
+        ImGui::DestroyContext();*/
     }
 
     void OnFocusGained() override
     {
-        ImGui_ImplDX9_Init(Graphics->GetDX9Device());
+        //ImGui_ImplDX9_Init(Graphics->GetDX9Device());
     }
 
     void OnFocusLost() override
     {
-        ImGui_ImplDX9_Shutdown();
+        //ImGui_ImplDX9_Shutdown();
     }
     
     float pillarTimer = 0;
@@ -143,7 +147,7 @@ public:
             pillarTimer = 0;
         }
 
-        if (playerAlive)
+        /*if (playerAlive)
         {
             if (playerVelocity.y > -playerVelocityLimit.y)
                 playerVelocity.y -= 0.05f;
@@ -152,12 +156,17 @@ public:
         {
             if (playerVelocity.y > -playerVelocityLimit.y * 1.75f)
                 playerVelocity.y -= 0.15f;
-        }
+        }*/
 
         if (S2DInput::GetKeyDown(InputKey::Space) && playerAlive)
         {
             S2DAudio::PlayAudioClip(&jumpClip);
             playerVelocity.y = 0.5f;
+        }
+
+        if (S2DInput::GetKeyDown(InputKey::F12))
+        {
+            Graphics->Screenshot("TestGame");
         }
 
         if (S2DInput::GetKeyDown(InputKey::Tab))
@@ -215,7 +224,7 @@ public:
             playerAlive = false;
         }
 
-        time += GetDeltaTime();
+        gtime += GetDeltaTime();
         fpsTime += GetDeltaTime();
 
         if (playerAlive && playerSpeed < 2.15f)
@@ -224,7 +233,7 @@ public:
             playerSpeed = 0;
     }
 
-    float time = 0;
+    float gtime = 0;
     float fpsTime = 0;
 
     char frameRateText[256];
@@ -238,7 +247,7 @@ public:
     // Here goes all the rendering stuff
     void OnRender() override
     {
-        Graphics->RenderSprite(&cam, &player, playerPos, Vec2(0.5, 0.5), Vec2(64, 64), playerAngle, TexFlipMode::None, Color::White());
+        Graphics->RenderSprite(&player, playerPos, Vec2(0.5, 0.5), Vec2(64, 64), playerAngle, TexFlipMode::None, S2DColor::White(), nullptr);
 
         for (auto b : pillars)
         {
@@ -247,8 +256,8 @@ public:
             if (it != pillars.end())
                 OutputDebugStringA(("#" + std::to_string(std::distance(pillars.begin(), it)) + " {" + std::to_string(b->currentPos) + "}\n").c_str());
 
-            Graphics->RenderFilledBox(&cam, Vec2(b->currentPos, b->holePos), Vec2(0.5f, 1.0f), Vec2(150, 1024), Color::Green());
-            Graphics->RenderFilledBox(&cam, Vec2(b->currentPos, b->holePos + b->holeSize), Vec2(0.5f, 0), Vec2(150, 1024), Color::Green());
+            Graphics->RenderFilledBox(Vec2(b->currentPos, b->holePos), Vec2(0.5f, 1.0f), Vec2(150, 1024), S2DColor::Green());
+            Graphics->RenderFilledBox(Vec2(b->currentPos, b->holePos + b->holeSize), Vec2(0.5f, 0), Vec2(150, 1024), S2DColor::Green());
         }
 
         if (fpsTime >= 0.075f)
@@ -261,106 +270,19 @@ public:
         sprintf(playerMovingText, "Movement speed: %f", playerSpeed);
         sprintf(pillarsText, "Spawned pillars: %d", pillars.size());
 
-        auto size = font.GetSize(20, frameRateText);
+        auto size = font.GetSize(frameRateText);
 
-        auto textSize = font.GetSize(16, testBuildText);
+        auto textSize = font.GetSize(testBuildText);
 
-        font.Render(20, frameRateText, Vec2(0, 0), Vec2(0, 0), 0, TexFlipMode::None, Color::White());
-        font.Render(20, playerMovingText, Vec2(0, size.y + 6), Vec2(0, 0), 0, TexFlipMode::None, Color::White());
-        font.Render(20, pillarsText, Vec2(0, size.y * 2 + 12), Vec2(0, 0), 0, TexFlipMode::None, Color::White());
-        font.Render(16, testBuildText, Vec2(Graphics->GetCurrentWindowSize().x - textSize.x - 6, Graphics->GetCurrentWindowSize().y - textSize.y - 6), Vec2(0, 0), 0, TexFlipMode::None, Color::White());
+        font.Render(20, frameRateText, Vec2(0, 0), Vec2(0, 0), 0, S2DColor::White());
+        font.Render(20, playerMovingText, Vec2(0, size.y + 6), Vec2(0, 0), 0, S2DColor::White());
+        font.Render(20, pillarsText, Vec2(0, size.y * 2 + 12), Vec2(0, 0), 0, S2DColor::White());
+        font.Render(16, testBuildText, Vec2(Graphics->GetCurrentWindowSize().x - textSize.x - 6, Graphics->GetCurrentWindowSize().y - textSize.y - 6), Vec2(0, 0), 0, S2DColor::White());
+    }
 
-        ImGui_ImplDX9_NewFrame();
-        ImGui_ImplSDL2_NewFrame(Graphics->GetWindow());
-        ImGui::NewFrame();
-
-        /*if (ImGui::Begin("Player", (bool*)0, ImGuiWindowFlags_AlwaysAutoResize))
-        {  
-            if (ImGui::IsWindowFocused())
-            {
-                isMovingPlayer = true;
-            }
-            else
-            {
-                isMovingPlayer = false;
-            }
-
-            std::vector<float*> pos = { &playerPos.x, &playerPos.y };
-
-            std::vector<ImU32> colors = { 
-                0xBB0000FF, // red
-                0xBB00FF00, // green
-                0xBBFF0000, // blue
-                0xBBFFFFFF, // white for alpha?
-            };
-
-            ImGui::DragFloatN_Colored("Position", pos, colors, 0.01f, -15000.0f, 15000.0f, "%.3f", 1.0f);
-
-            ImGui::End();
-        }*/
-
-        /*if (ImGui::Begin("About this Project", NULL, ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_AlwaysAutoResize))
-        {
-            ImGui::Text("Seven2D (S2D) Game Engine");
-            ImGui::Text("Created by Sevenisko");
-            ImGui::Separator();
-            ImGui::Text("Version: %d.%d.%d\n", GetEngineVersion().minor, GetEngineVersion().minor, GetEngineVersion().build);
-            ImGui::Text("Build date: %s", GetBuildDate());
-            ImGui::Text("Build time: %s", GetBuildTime());
-            ImGui::Separator();
-
-            if (ImGui::TreeNode("Used 3rd-Party libraries"))
-            {
-                ImGui::Text("Actually, these links are clickable. :)");
-                ImGui::NewLine();
-                ImGui::Text("> SDL2");
-                if (ImGui::IsItemClicked())
-                {
-                    ShellExecuteA(NULL, "open", "https://www.libsdl.org/", NULL, NULL, 0);
-                }
-                
-                ImGui::Text("> SDL2_mixer");
-                if (ImGui::IsItemClicked())
-                {
-                    ShellExecuteA(NULL, "open", "https://www.libsdl.org/projects/SDL_mixer/", NULL, NULL, 0);
-                }
-
-                ImGui::Text("> SDL2_ttf");
-                if (ImGui::IsItemClicked())
-                {
-                    ShellExecuteA(NULL, "open", "https://www.libsdl.org/projects/SDL_ttf/", NULL, NULL, 0);
-                }
-
-                ImGui::Text("> SDL2_image");
-                if (ImGui::IsItemClicked())
-                {
-                    ShellExecuteA(NULL, "open", "https://www.libsdl.org/projects/SDL_image/", NULL, NULL, 0);
-                }
-
-                ImGui::Text("> SDL2_net");
-                if (ImGui::IsItemClicked())
-                {
-                    ShellExecuteA(NULL, "open", "https://www.libsdl.org/projects/SDL_net/", NULL, NULL, 0);
-                }
-
-                ImGui::Text("> Dear ImGui");
-                if (ImGui::IsItemClicked())
-                {
-                    ShellExecuteA(NULL, "open", "https://github.com/ocornut/imgui", NULL, NULL, 0);
-                }
-
-                ImGui::Text("> box2d Physics Engine");
-                if (ImGui::IsItemClicked())
-                {
-                    ShellExecuteA(NULL, "open", "https://box2d.org/", NULL, NULL, 0);
-                }
-
-                ImGui::TreePop();
-            }
-        }*/
-
-        ImGui::Render();
-        ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
+    void OnPostRender(S2DTexture* frame) override
+    {
+        Graphics->RenderScreenTexture(frame, Vec2Int(0, 0), Vec2Int(Graphics->GetCurrentResolution()->width, Graphics->GetCurrentResolution()->height), S2DColor::Red(), nullptr);
     }
 
     MyGame() : S2DGame(&settings) {}
@@ -368,7 +290,7 @@ public:
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
-    settings = { "Flappy Guy - S2D Game Test", 0, new ScreenResolution {1600, 900}, true };
+    settings = { "Flappy Guy - S2D Game Test", new ScreenResolution {1600, 900}, false, true };
     MyGame* game = new MyGame();
     game->Run(nullptr);
 }

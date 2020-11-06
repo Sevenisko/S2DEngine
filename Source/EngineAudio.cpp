@@ -1,3 +1,19 @@
+/************************************************************\
+      _____ ___  _____    ______             _
+     / ____|__ \|  __ \  |  ____|           (_)
+    | (___    ) | |  | | | |__   _ __   __ _ _ _ __   ___
+     \___ \  / /| |  | | |  __| | '_ \ / _` | | '_ \ / _ \
+     ____) |/ /_| |__| | | |____| | | | (_| | | | | |  __/
+    |_____/|____|_____/  |______|_| |_|\__, |_|_| |_|\___|
+                                        __/ |
+                                       |___/
+    ======================================================
+        S2D Engine - An Open-Source 2D Game Framework
+                    Coded by Sevenisko
+
+    Purpose: Audio subsystem for S2D Engine
+\************************************************************/
+
 #include "EngineIncludes.h"
 #include <shlwapi.h>
 
@@ -39,6 +55,8 @@ void S2DAudio::SetMusicClip(S2DMusicClip* clip, bool loop)
     }
     else
     {
+        SDL_SetHint("SDL_NATIVE_MUSIC", "true");
+
         clip->SetHandle(Mix_LoadMUS(clip->GetPath()));
 
         Mix_PlayMusic(clip->GetHandle(), loop ? -1 : 0);
