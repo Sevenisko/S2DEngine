@@ -24,7 +24,7 @@ A Open-Source 2D Game Engine made entirely for 2D Game Development.
 - [x] Input Subsystem
 	- [x] Keyboard support
 	- [x] Mouse support
-	- [ ] Controller support 
+	- [X] Controller (Joystick) support 
 - [x] Sound Subsystem
 	- [x] Ability to play music
 	- [x] Ability to play sound files
