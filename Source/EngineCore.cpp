@@ -18,7 +18,7 @@
 #include <string>
 #include <thread>
 
-EngineInitSettings* defaultSettings = new EngineInitSettings{ "S2D Game Engine", new ScreenResolution {1280, 720}, false, true };
+EngineInitSettings* defaultSettings = new EngineInitSettings{ "S2D Game Engine", 0, new ScreenResolution {1280, 720}, false, true };
 
 bool IsConsoleApp()
 {
@@ -109,6 +109,39 @@ void S2DGame::HandleEvents(SDL_Event& e)
             break;
         }
         break;
+
+    case SDL_JOYAXISMOTION:
+    {
+        if (WindowFocused) 
+        {
+            float value = (float)e.jaxis.value;
+            if (value > 0) value /= SDL_JOYSTICK_AXIS_MAX;
+            else if (value < 0) value /= -SDL_JOYSTICK_AXIS_MIN;
+            Input::ProcessJoystickAxis(e.jaxis.which, e.jaxis.axis, value);
+        }
+        break;
+    }
+    
+    case SDL_JOYBUTTONDOWN:
+    {
+        if (WindowFocused) Input::ProcessJoystickButton(e.jbutton.which, e.jbutton.button, true);
+
+        break;
+    }
+
+    case SDL_JOYBUTTONUP:
+    {
+        if (WindowFocused) Input::ProcessJoystickButton(e.jbutton.which, e.jbutton.button, false);
+
+        break;
+    }
+
+    case SDL_JOYHATMOTION:
+    {
+        if (WindowFocused) Input::ProcessJoystickHat(e.jhat.which, e.jhat.hat, e.jhat.value);
+
+        break;
+    }
 
     case SDL_MOUSEBUTTONDOWN:
         if(WindowFocused) Input::ProcessMouseButton((MouseButton)(e.button.button - 1), true);
@@ -216,6 +249,7 @@ void S2DGame::Run(GameSplashScreen* splash)
     //Physics = new S2DPhysics();
     SDL_RaiseWindow(Graphics->GetWindow());
     WindowFocused = true;
+    Graphics->OnRenderReload = [&]() { OnRenderReload(); };
 
     OnInit();
 
@@ -251,18 +285,9 @@ void S2DGame::Run(GameSplashScreen* splash)
 
             OnUpdate();
 
-            //Graphics->EnableRenderTarget(true);
-
             Graphics->BeginFrame();
             OnRender();
             Graphics->EndFrame();
-
-            /*S2DTexture* scr = Graphics->GetCurrentFrame();
-
-            Graphics->EnableRenderTarget(false);
-            Graphics->BeginFrame();
-            OnPostRender(scr);
-            Graphics->EndFrame();*/
 
             // Setup time step (we don't use SDL_GetTicks() because it is using millisecond resolution)
             Uint64 frequency = SDL_GetPerformanceFrequency();

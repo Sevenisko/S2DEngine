@@ -22,6 +22,8 @@
 
 typedef struct IDirect3DTexture9 IDirect3DTexture9;
 
+typedef class S2DPlugin S2DPlugin;
+
 struct VersionInfo
 {
     int major;
@@ -76,7 +78,10 @@ public:
     // This function is called every frame and draws things into the buffer
     virtual void OnRender() {}
 
-    virtual void OnPostRender(S2DTexture* frame) {}
+    // This function is called when renderer is reloaded
+    virtual void OnRenderReload() {}
+
+
 
     // Starts the game engine
     void Run(GameSplashScreen* splash);

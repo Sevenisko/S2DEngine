@@ -30,6 +30,10 @@
     #include "EngineIncludes/S2D_Misc.h"
     #include "EngineIncludes/S2D_Graphics.h"
     #include "EngineIncludes/S2D_Input.h"
+    #include "EngineIncludes/S2D_ParticleSystem.h"
+    #include "EngineIncludes/S2D_ParticleEmittor.h"
+
+    #include "EngineIncludes/Plugins/S2DPlugin.h"
 
     #include "EngineIncludes/S2D_Audio.h"
     #include "EngineIncludes/S2D_Physics.h"
@@ -38,9 +42,14 @@
 // Welp, thanks for your misclick, Davo :D
 typedef void boid;
 
+extern std::vector<ParticleEmittor*> Emittors;
+
 namespace Input
 {
     extern boid ProcessKey(SDL_Scancode key, bool state);
+    extern boid ProcessJoystickAxis(int index, int axis, float value);
+    extern boid ProcessJoystickHat(int index, int hat, int value);
+    extern boid ProcessJoystickButton(int index, int button, bool state);
     extern boid ProcessMouseButton(MouseButton button, bool state);
     extern boid UpdateMousePos();
     extern boid UpdateMousePos(int x, int y);

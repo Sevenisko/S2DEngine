@@ -1,22 +1,23 @@
 /************************************************************\
-      _____ ___  _____    ______             _
-     / ____|__ \|  __ \  |  ____|           (_)
-    | (___    ) | |  | | | |__   _ __   __ _ _ _ __   ___
-     \___ \  / /| |  | | |  __| | '_ \ / _` | | '_ \ / _ \
-     ____) |/ /_| |__| | | |____| | | | (_| | | | | |  __/
-    |_____/|____|_____/  |______|_| |_|\__, |_|_| |_|\___|
-                                        __/ |
-                                       |___/
-    ======================================================
-        S2D Engine - An Open-Source 2D Game Framework
-                    Coded by Sevenisko
+	  _____ ___  _____    ______             _
+	 / ____|__ \|  __ \  |  ____|           (_)
+	| (___    ) | |  | | | |__   _ __   __ _ _ _ __   ___
+	 \___ \  / /| |  | | |  __| | '_ \ / _` | | '_ \ / _ \
+	 ____) |/ /_| |__| | | |____| | | | (_| | | | | |  __/
+	|_____/|____|_____/  |______|_| |_|\__, |_|_| |_|\___|
+										__/ |
+									   |___/
+	======================================================
+		S2D Engine - An Open-Source 2D Game Framework
+					Coded by Sevenisko
 
-    Purpose: Implementation of the Graphics subsystem
+	Purpose: Implementation of the Graphics subsystem
 \************************************************************/
 
 #ifndef S2D_GFX_INCLUDED
 #define S2D_GFX_INCLUDED
 
+#include <SDL.h>
 #include <Windows.h>
 #include <vector>
 #include <map>
@@ -24,34 +25,43 @@
 #include <stdio.h>
 #include <functional>
 
-#if defined(S2D_INCLUDE_DX9)
+#ifdef S2D_INCLUDE_DX9
 #include <d3d9.h>
 #include <d3dx9.h>
 #else
+typedef struct IDirect3DDevice9 IDirect3DDevice9;
 typedef struct IDirect3DTexture9 IDirect3DTexture9;
 #endif
 
-#if defined(S2D_INCLUDE_SDL)
-#include <SDL.h>
-#else
-typedef struct SDL_Window SDL_Window;
-#endif
+enum class ParticleStyle
+{
+	None,
+	Fire,
+	Firework,
+	Sun,
+	Galaxy,
+	Flower,
+	Meteor,
+	Spiral,
+	Explosion,
+	Smoke,
+	Snow,
+	Rain,
+};
 
-typedef uint8_t Uint8;
-
-struct S2DColor
+struct Color
 {
 public:
 	Uint8 r = 0, g = 0, b = 0, a = 0;
 
-	S2DColor(Uint8 r, Uint8 g, Uint8 b)
+	Color(Uint8 r, Uint8 g, Uint8 b)
 	{
 		this->r = r;
 		this->g = g;
 		this->b = b;
 		this->a = 255;
 	}
-	S2DColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
+	Color(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 	{
 		this->r = r;
 		this->g = g;
@@ -59,7 +69,7 @@ public:
 		this->a = a;
 	}
 
-	static S2DColor Lerp(S2DColor c1, S2DColor c2, float f)
+	static Color Lerp(Color c1, Color c2, float f)
 	{
 		float r1 = (float)c1.r;
 		float g1 = (float)c1.g;
@@ -76,43 +86,43 @@ public:
 		float b3 = (1 - f) * b1 + f * b2;
 		float a3 = (1 - f) * a1 + f * a2;
 
-		OutputDebugStringA(("S2DColor: {" + std::to_string(r3) + ", " + std::to_string(g3) + ", " + std::to_string(b3) + ", " + std::to_string(a3) + "}\n").c_str());
+		OutputDebugStringA(("Color: {" + std::to_string(r3) + ", " + std::to_string(g3) + ", " + std::to_string(b3) + ", " + std::to_string(a3) + "}\n").c_str());
 
 		Uint8 r = (int)r3;
 		Uint8 g = (int)g3;
 		Uint8 b = (int)b3;
 		Uint8 a = (int)a3;
 
-		return S2DColor(r, g, b, a);
+		return Color(r, g, b, a);
 	}
 
-	static S2DColor Black() { return S2DColor(0, 0, 0); }
-	static S2DColor White() { return S2DColor(255, 255, 255); }
-	static S2DColor Red() { return S2DColor(255, 0, 0); }
-	static S2DColor Green() { return S2DColor(0, 255, 0); }
-	static S2DColor Blue() { return S2DColor(0, 0, 255); }
-	static S2DColor Yellow() { return S2DColor(255, 255, 0); }
-	static S2DColor Aqua() { return S2DColor(0, 255, 255); }
-	static S2DColor Pink() { return S2DColor(255, 0, 255); }
-	static S2DColor Gray() { return S2DColor(125, 125, 125); }
+	static Color Black() { return Color(0, 0, 0); }
+	static Color White() { return Color(255, 255, 255); }
+	static Color Red() { return Color(255, 0, 0); }
+	static Color Green() { return Color(0, 255, 0); }
+	static Color Blue() { return Color(0, 0, 255); }
+	static Color Yellow() { return Color(255, 255, 0); }
+	static Color Aqua() { return Color(0, 255, 255); }
+	static Color Pink() { return Color(255, 0, 255); }
+	static Color Gray() { return Color(125, 125, 125); }
 
-	static S2DColor LightGray() { return S2DColor(175, 175, 175); }
-	static S2DColor LightRed() { return S2DColor(255, 64, 64); }
-	static S2DColor LightGreen() { return S2DColor(64, 255, 64); }
-	static S2DColor LightBlue() { return S2DColor(64, 64, 255); }
-	static S2DColor LightYellow() { return S2DColor(255, 255, 64); }
-	static S2DColor LightAqua() { return S2DColor(64, 255, 255); }
-	static S2DColor LightPink() { return S2DColor(255, 64, 255); }
+	static Color LightGray() { return Color(175, 175, 175); }
+	static Color LightRed() { return Color(255, 64, 64); }
+	static Color LightGreen() { return Color(64, 255, 64); }
+	static Color LightBlue() { return Color(64, 64, 255); }
+	static Color LightYellow() { return Color(255, 255, 64); }
+	static Color LightAqua() { return Color(64, 255, 255); }
+	static Color LightPink() { return Color(255, 64, 255); }
 
-	static S2DColor DarkRed() { return S2DColor(150, 0, 0); }
-	static S2DColor DarkGreen() { return S2DColor(0, 150, 0); }
-	static S2DColor DarkBlue() { return S2DColor(0, 0, 150); }
-	static S2DColor DarkYellow() { return S2DColor(150, 150, 0); }
-	static S2DColor DarkAqua() { return S2DColor(0, 150, 150); }
-	static S2DColor DarkPink() { return S2DColor(150, 0, 150); }
-	static S2DColor DarkGray() { return S2DColor(75, 75, 75); }
+	static Color DarkRed() { return Color(150, 0, 0); }
+	static Color DarkGreen() { return Color(0, 150, 0); }
+	static Color DarkBlue() { return Color(0, 0, 150); }
+	static Color DarkYellow() { return Color(150, 150, 0); }
+	static Color DarkAqua() { return Color(0, 150, 150); }
+	static Color DarkPink() { return Color(150, 0, 150); }
+	static Color DarkGray() { return Color(75, 75, 75); }
 
-	S2DColor operator =(S2DColor a)
+	Color operator =(Color a)
 	{
 		this->r = a.r;
 		this->g = a.g;
@@ -121,12 +131,12 @@ public:
 		return *this;
 	}
 
-	bool operator==(S2DColor a) const
+	bool operator==(Color a) const
 	{
 		return (this->r == a.r && this->g == a.g && this->b == a.b && this->a == a.a);
 	}
 
-	bool operator!=(S2DColor a) const
+	bool operator!=(Color a) const
 	{
 		return (this->r != a.r || this->g != a.g || this->b != a.b || this->a != a.a);
 	}
@@ -229,7 +239,7 @@ enum class TexFlipMode
 
 struct ScreenResolution
 {
-    int width, height;
+	int width, height;
 };
 
 extern std::vector<ScreenResolution> GetResolutions();
@@ -238,30 +248,26 @@ extern ScreenResolution* GetResolution(int width, int height);
 
 struct EngineInitSettings
 {
-    const char* title;
-    ScreenResolution* resolution;
-    bool fullscreen, vsync;
+	const char* title;
+	int screenNum;
+	ScreenResolution* resolution;
+	bool fullscreen;
+	bool vsync;
 };
-	
+
+#define S2DWorldPosToPixels(relX, relY, X, Y) Vec2Int scrSize = Graphics->GetCurrentWindowSize(); \
+	X = (relX / 16.0f) * scrSize.x; \
+	Y = (relY / 16.0f) * scrSize.y;
+
+#define S2DPixelsToWorldPos(X, Y, relX, relY) Vec2Int scrSize = Graphics->GetCurrentWindowSize(); \
+	relX = (float)(X / (scrSize.x - (scrSize.x / 2))) * 16.0f; \
+	relY = (float)(Y / (scrSize.y - (scrSize.y / 2))) * 16.0f; 
+
 #ifdef S2D_MAIN_INCLUDED
 #define DllExport __declspec(dllexport)
 #else
 #define DllExport
 #endif // S2D_MAIN_INCLUDED
-
-struct Rect
-{
-	int x, y;
-	int w, h;
-};
-
-struct FRect
-{
-	float x;
-	float y;
-	float w;
-	float h;
-};
 
 class DllExport S2DCamera
 {
@@ -272,83 +278,74 @@ public:
 class DllExport S2DTexture
 {
 public:
-    int width, height, textureID;
-#if defined(S2D_INCLUDE_DX9)
-	IDirect3DTexture9* GetDX9Texture() { return nativeTexture; }
-	D3DFORMAT GetDX9TextureFormat() { return textureFormat; }
-#endif
+	int width, height, textureID;
+	SDL_Texture* GetSDLTexture() { return nativeTexture; }
 	const char* GetPath() { return texPath; }
+	Uint32 GetFormat() { return format; }
 
-	S2DTexture() {};
+	IDirect3DTexture9* ToDX9Texture();
 
-#if defined(S2D_INCLUDE_DX9)
-	S2DTexture(IDirect3DTexture9* tex, const char* path)
+	S2DTexture(SDL_Texture* tex, const char* path, Uint32 pixelformat)
 	{
 		width = height = 0;
 		texPath = path;
 		nativeTexture = tex;
-		D3DSURFACE_DESC desc;
-		tex->GetLevelDesc(0, &desc);
-		width = desc.Width;
-		height = desc.Height;
+		format = pixelformat;
+		SDL_QueryTexture(tex, NULL, NULL, &width, &height);
 	}
-#endif
-
 private:
+	Uint32 format;
 	const char* texPath;
-#if defined(S2D_INCLUDE_DX9)
-	IDirect3DTexture9* nativeTexture;
-	D3DFORMAT textureFormat;
-#endif
+	SDL_Texture* nativeTexture;
 };
 
-class DllExport S2DShader
+class DllExport S2DRenderTexture
 {
-private:
-#if defined(S2D_INCLUDE_DX9)
-	IDirect3DVertexShader9* VertexShader;
-	IDirect3DPixelShader9* PixelShader;
-	LPD3DXCONSTANTTABLE* VertexConstantTable;
-	LPD3DXCONSTANTTABLE* PixelConstantTable;
-#endif
-
 public:
-	S2DShader() {};
-	S2DShader(const char* path);
+	int width, height;
+	SDL_Texture* GetSDLTexture() { return nativeTexture; }
+	Uint32 GetFormat() { return format; }
 
-	~S2DShader();
-#if defined(S2D_INCLUDE_DX9)
-	IDirect3DVertexShader9* GetVertexShader() { return VertexShader; }
-	IDirect3DPixelShader9* GetPixelShader() { return PixelShader; }
-#endif
+	S2DRenderTexture(SDL_Texture* tex, Uint32 pixelformat)
+	{
+		width = height = 0;
+		nativeTexture = tex;
+		format = pixelformat;
+		SDL_QueryTexture(tex, NULL, NULL, &width, &height);
+	}
+
+private:
+	Uint32 format;
+	SDL_Texture* nativeTexture;
 };
 
 class DllExport S2DFont
 {
 public:
-	Vec2 GetSize(const char* text);
+	Vec2Int GetSize(int size, const char* text);
 
-	void Render(float scale, const char* text, Vec2 pos, Vec2 center, float angle, S2DColor S2DColor);
+	void UpdateRenderer(SDL_Renderer* renderer);
+
+	void Render(int size, const char* text, Vec2 pos, Vec2 center, float angle, TexFlipMode flip, Color color);
+
+	S2DTexture* RenderToTexture(int size, const char* text, Color color);
 
 	S2DFont() {}
 
-	~S2DFont();
-
-	S2DFont(const char* name, int size, bool bold);
+	S2DFont(SDL_Renderer* renderer, const char* path);
 private:
-#if defined(S2D_INCLUDE_DX9)
-	ID3DXFont* font;
-#endif
+	std::string ttfFile;
+	SDL_Renderer* myRenderer;
 };
 
 class DllExport S2DSprite
 {
 public:
-    S2DTexture* GetTexture() { return texture; }
+	S2DTexture* GetTexture() { return texture; }
 	void UpdateTexture(S2DTexture* tex) { texture = tex; }
 	int GetCurFrame() { return curFrame; }
 	int GetFrameRate() { return framerate; }
-	std::vector<Rect> GetFrames() { return frames; }
+	std::vector<SDL_Rect> GetFrames() { return frames; }
 	void SetFrame(int frame);
 	void NextFrame();
 	void PrevFrame();
@@ -356,19 +353,21 @@ public:
 	S2DSprite() {}
 	S2DSprite(S2DTexture* tex, Vec2Int sprSize, int frameRate, int numFrames);
 	S2DSprite(S2DTexture* tex, std::vector<Vec2Int> sprSizes, int frameRate);
-	~S2DSprite() {}
+	~S2DSprite();
 
 private:
-    std::vector<Rect> frames;
-    S2DTexture* texture;
+	std::vector<SDL_Rect> frames;
+	S2DTexture* texture;
 	int curFrame;
-    int framerate;
+	int framerate;
 };
 
 // Class containing the Graphics Subsystem
 class DllExport S2DGraphics
 {
 public:
+	std::function<void()> OnRenderReload;
+
 	// Get current screen resolution
 	ScreenResolution* GetCurrentResolution() { return &CurrentResolution; }
 
@@ -378,78 +377,81 @@ public:
 	// Get current screen (useful when using more screens)
 	int GetCurrentScreen() { return CurrentScreen; }
 
-#if defined (S2D_INCLUDE_SDL)
-    // Get the SDL Window instance
-    SDL_Window* GetWindow() { return EngineWindow; }
-#endif
-
-#if defined (S2D_INCLUDE_DX9)
-	// Get the Direct3D9 Interface
-	IDirect3D9* GetDX9Interface() { return Interface; }
-
-	// Get the Direct3D9 Graphics Device
-	IDirect3DDevice9* GetDX9Device() { return Device; }
-#endif
+	// Get a SDL Window instance
+	SDL_Window* GetWindow() { return EngineWindow; }
+	// Get a SDL Renderer instance
+	SDL_Renderer* GetRenderer() { return NativeRenderer; }
+	// Get an Direct3D9 Graphics Device created by SDL Renderer
+	IDirect3DDevice9* GetDX9Device();
 
 	// Set screen for window (useful when using more screens)
 	void SetScreen(int screen);
 
+	void SetCamera(S2DCamera* camera) { cam = camera; }
+	S2DCamera* GetCamera() { return cam; }
+
+	bool Screenshot(const char* file);
+
 	// Set a screen resolution
-    void SetResolution(ScreenResolution* resolution);
-    void SetResolution(int w, int h);
+	void SetResolution(ScreenResolution* resolution);
+	void SetResolution(int w, int h);
 
 	// Enable/Disable fullscreen
-    void SetFullscreen(bool state);
+	void SetFullscreen(bool state);
 
-	// Set the Engine's camera
-	void SetCamera(S2DCamera* cam);
+	// Draws an filled box
+	void RenderFilledBox(Vec2 pos, Vec2 center, Vec2 size, Color color);
 
-	// Take and save the screenshot
-	void Screenshot(const char* name);
+	// Draws an wireframe box
+	void RenderBox(Vec2 pos, Vec2 center, Vec2 size, Color color);
 
-	// Enable rendering into secondary render target
-	void EnableRenderTarget(bool state);
+	// Drawns an basic line
+	void RenderLine(Vec2 p1, Vec2 p2, Color color);
 
-	bool RenderTargetEnabled() { return renderTargetEnabled; }
+	// Draws an single point
+	void RenderPoint(Vec2 position, Color color);
 
-	// Take the screenshot and convert it into the texture
-	S2DTexture* GetCurrentFrame();
+	// Draws an sprite
+	void RenderSprite(S2DSprite* sprite, Vec2 pos, Vec2 center, Vec2 size, float angle, TexFlipMode flip, Color color);
 
-	// Get the current Engine's camera
-	S2DCamera* GetCurrentCamera() { return currentCamera; }
+	// Draws an texture
+	void RenderTexture(int textureID, Vec2 pos, Vec2 center, Vec2 size, float angle, TexFlipMode flip, Color color);
 
-	// Draw filled box
-	void RenderFilledBox(Vec2 pos, Vec2 center, Vec2 size, S2DColor S2DColor);
+	// Draws an texture
+	void RenderTexture(S2DTexture* tex, Vec2 pos, Vec2 center, Vec2 size, float angle, TexFlipMode flip, Color color);
 
-	// Draw wireframe box
-	void RenderBox(Vec2 pos, Vec2 center, Vec2 size, S2DColor S2DColor);
+	void RenderTextureOnScreen(S2DTexture* tex, Vec2Int pos, Vec2Int size, float angle, TexFlipMode flip, Color color);
 
-	// Draw basic line
-	void RenderLine(Vec2 p1, Vec2 p2, float width, S2DColor S2DColor);
+	void SetRenderTexture(S2DRenderTexture* tex);
 
-	// Draw basic line using screen coordinates
-	void RenderLineOnScreen(Vec2 p1, Vec2 p2, float width, S2DColor color);
+	int CreateParticleEmittor(Vec2 pos, ParticleStyle style);
 
-	// Draw single point
-	void RenderPoint(Vec2 position, float size, S2DColor S2DColor);
+	bool RenderParticleEmittor(int emitID, Vec2 pos, float angle);
 
-	// Draw a sprite
-	void RenderSprite(S2DSprite* sprite, Vec2 pos, Vec2 center, Vec2 size, float angle, TexFlipMode flip, S2DColor S2DColor, S2DShader* shader);
-	
-	// Draw texture
-	void RenderTexture(S2DTexture* tex, Vec2 pos, Vec2 center, Vec2 size, float angle, TexFlipMode flip, S2DColor S2DColor, S2DShader* shader);
+	bool ResetParticleEmittor(int emitID);
 
-	// Draw texture on screen space
-	void RenderScreenTexture(S2DTexture* tex, Vec2Int pos, Vec2Int size, S2DColor S2DColor, S2DShader* shader);
+	bool SetParticleEmittorStyle(int emitID, ParticleStyle style);
 
-	// Load a texture from file
-	S2DTexture* LoadTexture(const char* fileName);
+	void DestroyParticleEmittor(int emitID);
+
+	// Loads an texture from file
+	int LoadTexture(const char* fileName);
+	// Loads an texture from file
+	S2DTexture* LoadTextureRaw(const char* fileName);
+
+	// Create a render texture
+	S2DRenderTexture* CreateRenderTexture(int width, int height);
 
 	// Get an texture from textureID
 	S2DTexture* GetTextureByID(int texID);
-	
-	// Unloads a specific texture
+
+	// Unloads an specific texture
+	bool UnloadTexture(int textureID);
+	// Unloads an specific texture
 	bool UnloadTexture(S2DTexture* texture);
+
+	// Destroy the specified render texture
+	bool DestroyRenderTexture(S2DRenderTexture* tex);
 
 	// Get all paths to loaded textures for reload
 	std::map<int, const char*> GetReloadTextures();
@@ -457,21 +459,21 @@ public:
 	// Unload all the loaded textures
 	void ClearTextures();
 
-    // Starts the rendering frame sequence
-    void BeginFrame();
+	// Starts the rendering frame sequence
+	void BeginFrame();
 
-    // Ends the rendering frame sequence and draws the buffer to screen
-    void EndFrame();
+	// Ends the rendering frame sequence and draws the buffer to screen
+	void EndFrame();
 
-    S2DGraphics() {};
+	S2DGraphics() {};
 
-    // Creates an instance of 2D Rendering Engine
-    S2DGraphics(EngineInitSettings* settings);
+	// Creates an instance of 2D Rendering Engine
+	S2DGraphics(EngineInitSettings* settings);
 
-    // Destroys the current instance of 2D Rendering Engine
-    ~S2DGraphics();
+	// Destroys the current instance of 2D Rendering Engine
+	~S2DGraphics();
 
-    bool GetFullscreen() { return Fullscreen; }
+	bool GetFullscreen() { return Fullscreen; }
 
 	bool IsRunning() { return Running; }
 
@@ -480,25 +482,13 @@ private:
 
 	bool Running;
 
-#if defined (S2D_INCLUDE_SDL)
-    SDL_Window* EngineWindow;
-#endif
-#if defined (S2D_INCLUDE_DX9)
-	IDirect3D9* Interface;
-	D3DPRESENT_PARAMETERS Parameters;
-    IDirect3DDevice9* Device;
-
-	IDirect3DSurface9* DefaultRenderTarget;
-	IDirect3DSurface9* CustomRenderTarget;
-#endif
-
-	bool renderTargetEnabled;
-
-	S2DCamera* currentCamera;
-
+	S2DCamera* cam;
+	S2DRenderTexture* curRenderTarget;
+	SDL_Window* EngineWindow;
+	SDL_Renderer* NativeRenderer;
 	ScreenResolution CurrentResolution;
 	int CurrentScreen;
-    bool Fullscreen;
+	bool Fullscreen;
 };
 
 #endif // !S2D_GFX_INCLUDED

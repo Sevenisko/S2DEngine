@@ -41,6 +41,16 @@ enum class MouseButton
     Left, Middle, Right
 };
 
+enum class JoystickHatDirection
+{
+    Up = 1, Right = 2, Down = 4, Left = 8
+};
+
+enum
+{
+    JOYAXIS_X, JOYAXIS_Y
+};
+
 class DllExport S2DInput
 {
 public:
@@ -52,6 +62,11 @@ public:
     static void SetMousePosition(Vec2Int pos);
     static Vec2Int* GetMousePosition();
     static Vec2Int* GetMouseDelta();
+    static float GetJoystickAxis(int index, int axis);
+    static bool GetJoystickButtonDown(int index, int axis);
+    static bool GetJoystickButtonUp(int index, int axis);
+    static bool GetJoystickButton(int index, int axis);
+    static bool GetJoystickHat(int index, JoystickHatDirection direction);
     static bool GetMouseButtonDown(MouseButton button);
     static bool GetMouseButtonUp(MouseButton button);
     static bool GetMouseButton(MouseButton button);

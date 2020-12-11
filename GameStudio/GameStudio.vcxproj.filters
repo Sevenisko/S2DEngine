@@ -3,56 +3,9 @@
   <ItemGroup>
     <ClCompile Include="GameStudioApp.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="..\Source\ImGui\imgui.cpp">
-      <Filter>ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\ImGui\imgui_demo.cpp">
-      <Filter>ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\ImGui\imgui_draw.cpp">
-      <Filter>ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\ImGui\imgui_impl_dx9.cpp">
-      <Filter>ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\ImGui\imgui_impl_sdl.cpp">
-      <Filter>ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\ImGui\imgui_widgets.cpp">
-      <Filter>ImGui</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameStudio.h" />
-    <ClInclude Include="..\Source\ImGui\imconfig.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\ImGui\imgui.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\ImGui\imgui_impl_dx9.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\ImGui\imgui_impl_sdl.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\ImGui\imgui_internal.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\ImGui\imstb_rectpack.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\ImGui\imstb_textedit.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\ImGui\imstb_truetype.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
     <ClInclude Include="FontAwesome.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Filter Include="ImGui">
-      <UniqueIdentifier>{107778c2-d620-44d4-a606-03de85926782}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
 </Project>

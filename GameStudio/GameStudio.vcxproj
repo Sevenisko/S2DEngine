@@ -168,24 +168,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\Source\ImGui\imgui.cpp" />
-    <ClCompile Include="..\Source\ImGui\imgui_demo.cpp" />
-    <ClCompile Include="..\Source\ImGui\imgui_draw.cpp" />
-    <ClCompile Include="..\Source\ImGui\imgui_impl_dx9.cpp" />
-    <ClCompile Include="..\Source\ImGui\imgui_impl_sdl.cpp" />
-    <ClCompile Include="..\Source\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="GameStudioApp.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Source\ImGui\imconfig.h" />
-    <ClInclude Include="..\Source\ImGui\imgui.h" />
-    <ClInclude Include="..\Source\ImGui\imgui_impl_dx9.h" />
-    <ClInclude Include="..\Source\ImGui\imgui_impl_sdl.h" />
-    <ClInclude Include="..\Source\ImGui\imgui_internal.h" />
-    <ClInclude Include="..\Source\ImGui\imstb_rectpack.h" />
-    <ClInclude Include="..\Source\ImGui\imstb_textedit.h" />
-    <ClInclude Include="..\Source\ImGui\imstb_truetype.h" />
     <ClInclude Include="FontAwesome.h" />
     <ClInclude Include="GameStudio.h" />
   </ItemGroup>

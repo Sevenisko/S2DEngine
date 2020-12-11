@@ -57,6 +57,9 @@
     <ClInclude Include="..\..\3rdParty\ImGui\imstb_truetype.h">
       <Filter>3rd-Party Code\ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\EngineIncludes\S2D_ParticleEmittor.h">
+      <Filter>Engine Includes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\EngineCore.cpp">
@@ -87,6 +90,12 @@
       <Filter>3rd-Party Code\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\EngineGraphics.cpp">
+      <Filter>Engine Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\ParticleEmittor.cpp">
+      <Filter>Engine Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\ParticleSystem.cpp">
       <Filter>Engine Code</Filter>
     </ClCompile>
   </ItemGroup>

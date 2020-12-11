@@ -1,4 +1,6 @@
-﻿#include <S2D_Misc.h>
+﻿#define S2D_INCLUDE_DX9
+
+#include <S2D_Misc.h>
 #include <S2D_Graphics.h>
 #include <S2D_Input.h>
 #include <S2D_Physics.h>
@@ -73,6 +75,8 @@ public:
     
     int sndVolume = 100, musVolume = 55;
 
+    int particleEmittor = -1;
+
     // Here goes all the initialization stuff
     void OnInit() override
     {
@@ -91,11 +95,11 @@ public:
         /*ImGui_ImplSDL2_InitForD3D(Graphics->GetWindow());
         ImGui_ImplDX9_Init(Graphics->GetDX9Device());*/
 
-        font = S2DFont("Arial", 16, false);
+        font = S2DFont(Graphics->GetRenderer(), "data\\Ubuntu.ttf");
 
-        player = S2DSprite(Graphics->LoadTexture("data\\sprites\\player.png"), { {17, 18}, {17, 18}, {17, 18} }, 15);
+        player = S2DSprite(Graphics->LoadTextureRaw("data\\sprites\\player.png"), { {17, 18}, {17, 18}, {17, 18} }, 15);
 
-        tex = Graphics->LoadTexture("data\\testscreen.png");
+        tex = Graphics->LoadTextureRaw("data\\testscreen.png");
 
         jumpClip = S2DAudioClip("data\\sounds\\Jump.wav");
         hitClip = S2DAudioClip("data\\sounds\\Hit.wav");
@@ -105,6 +109,8 @@ public:
         S2DAudio::SetMusicVolume(musVolume);
 
         Graphics->SetCamera(cam);
+
+        particleEmittor = Graphics->CreateParticleEmittor(playerPos, ParticleStyle::Meteor);
     }
 
     // Here goes all the SDL Event stuff
@@ -147,7 +153,7 @@ public:
             pillarTimer = 0;
         }
 
-        /*if (playerAlive)
+        if (playerAlive)
         {
             if (playerVelocity.y > -playerVelocityLimit.y)
                 playerVelocity.y -= 0.05f;
@@ -156,7 +162,7 @@ public:
         {
             if (playerVelocity.y > -playerVelocityLimit.y * 1.75f)
                 playerVelocity.y -= 0.15f;
-        }*/
+        }
 
         if (S2DInput::GetKeyDown(InputKey::Space) && playerAlive)
         {
@@ -166,7 +172,16 @@ public:
 
         if (S2DInput::GetKeyDown(InputKey::F12))
         {
-            Graphics->Screenshot("TestGame");
+            time_t rawtime;
+            struct tm* timeinfo;
+            char buffer[128];
+
+            time(&rawtime);
+            timeinfo = localtime(&rawtime);
+
+            strftime(buffer, sizeof(buffer), "%d-%m-%Y_%H-%M-%S.png", timeinfo);
+
+            Graphics->Screenshot(buffer);
         }
 
         if (S2DInput::GetKeyDown(InputKey::Tab))
@@ -181,6 +196,9 @@ public:
                 delete b;
             }
             pillars.clear();
+
+            Graphics->ResetParticleEmittor(particleEmittor);
+            Graphics->SetParticleEmittorStyle(particleEmittor, ParticleStyle::Meteor);
 
             player.SetFrame(0);
             playerAlive = true;
@@ -221,6 +239,7 @@ public:
         {
             player.SetFrame(1);
             S2DAudio::PlayAudioClip(&hitClip);
+            Graphics->SetParticleEmittorStyle(particleEmittor, ParticleStyle::Fire);
             playerAlive = false;
         }
 
@@ -244,10 +263,18 @@ public:
 
     bool isMovingPlayer = false;
 
+    // Here comes all the reload stuff
+    void OnRenderReload() override
+    {
+        player = S2DSprite(Graphics->LoadTextureRaw("data\\sprites\\player.png"), { {17, 18}, {17, 18}, {17, 18} }, 15);
+        font.UpdateRenderer(Graphics->GetRenderer());
+    }
+
     // Here goes all the rendering stuff
     void OnRender() override
     {
-        Graphics->RenderSprite(&player, playerPos, Vec2(0.5, 0.5), Vec2(64, 64), playerAngle, TexFlipMode::None, S2DColor::White(), nullptr);
+        Graphics->RenderParticleEmittor(particleEmittor, playerPos, playerAngle);
+        Graphics->RenderSprite(&player, playerPos, Vec2(0.5, 0.5), Vec2(64, 64), playerAngle, TexFlipMode::None, Color::White());
 
         for (auto b : pillars)
         {
@@ -256,8 +283,8 @@ public:
             if (it != pillars.end())
                 OutputDebugStringA(("#" + std::to_string(std::distance(pillars.begin(), it)) + " {" + std::to_string(b->currentPos) + "}\n").c_str());
 
-            Graphics->RenderFilledBox(Vec2(b->currentPos, b->holePos), Vec2(0.5f, 1.0f), Vec2(150, 1024), S2DColor::Green());
-            Graphics->RenderFilledBox(Vec2(b->currentPos, b->holePos + b->holeSize), Vec2(0.5f, 0), Vec2(150, 1024), S2DColor::Green());
+            Graphics->RenderFilledBox(Vec2(b->currentPos, b->holePos), Vec2(0.5f, 1.0f), Vec2(150, 1024), Color::Green());
+            Graphics->RenderFilledBox(Vec2(b->currentPos, b->holePos + b->holeSize), Vec2(0.5f, 0), Vec2(150, 1024), Color::Green());
         }
 
         if (fpsTime >= 0.075f)
@@ -270,19 +297,14 @@ public:
         sprintf(playerMovingText, "Movement speed: %f", playerSpeed);
         sprintf(pillarsText, "Spawned pillars: %d", pillars.size());
 
-        auto size = font.GetSize(frameRateText);
+        auto size = font.GetSize(20, frameRateText);
 
-        auto textSize = font.GetSize(testBuildText);
+        auto textSize = font.GetSize(16, testBuildText);
 
-        font.Render(20, frameRateText, Vec2(0, 0), Vec2(0, 0), 0, S2DColor::White());
-        font.Render(20, playerMovingText, Vec2(0, size.y + 6), Vec2(0, 0), 0, S2DColor::White());
-        font.Render(20, pillarsText, Vec2(0, size.y * 2 + 12), Vec2(0, 0), 0, S2DColor::White());
-        font.Render(16, testBuildText, Vec2(Graphics->GetCurrentWindowSize().x - textSize.x - 6, Graphics->GetCurrentWindowSize().y - textSize.y - 6), Vec2(0, 0), 0, S2DColor::White());
-    }
-
-    void OnPostRender(S2DTexture* frame) override
-    {
-        Graphics->RenderScreenTexture(frame, Vec2Int(0, 0), Vec2Int(Graphics->GetCurrentResolution()->width, Graphics->GetCurrentResolution()->height), S2DColor::Red(), nullptr);
+        font.Render(20, frameRateText, Vec2(0, 0), Vec2(0, 0), 0, TexFlipMode::None, Color::White());
+        font.Render(20, playerMovingText, Vec2(0, size.y + 6), Vec2(0, 0), 0, TexFlipMode::None, Color::White());
+        font.Render(20, pillarsText, Vec2(0, size.y * 2 + 12), Vec2(0, 0), 0, TexFlipMode::None, Color::White());
+        font.Render(16, testBuildText, Vec2(Graphics->GetCurrentWindowSize().x - textSize.x - 6, Graphics->GetCurrentWindowSize().y - textSize.y - 6), Vec2(0, 0), 0, TexFlipMode::None, Color::White());
     }
 
     MyGame() : S2DGame(&settings) {}
@@ -290,7 +312,7 @@ public:
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
-    settings = { "Flappy Guy - S2D Game Test", new ScreenResolution {1600, 900}, false, true };
+    settings = { "Flappy Guy - S2D Game Test", 0, new ScreenResolution {1280, 720}, false, true };
     MyGame* game = new MyGame();
     game->Run(nullptr);
 }

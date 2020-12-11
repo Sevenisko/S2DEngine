@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -33,6 +33,7 @@
     <ClInclude Include="..\..\Source\EngineIncludes\S2D_Graphics.h" />
     <ClInclude Include="..\..\Source\EngineIncludes\S2D_Input.h" />
     <ClInclude Include="..\..\Source\EngineIncludes\S2D_Misc.h" />
+    <ClInclude Include="..\..\Source\EngineIncludes\S2D_ParticleEmittor.h" />
     <ClInclude Include="..\..\Source\EngineVersion.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
@@ -47,6 +48,8 @@
     <ClCompile Include="..\..\Source\EngineCore.cpp" />
     <ClCompile Include="..\..\Source\EngineGraphics.cpp" />
     <ClCompile Include="..\..\Source\EngineInput.cpp" />
+    <ClCompile Include="..\..\Source\ParticleEmittor.cpp" />
+    <ClCompile Include="..\..\Source\ParticleSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="S2D.rc" />
